@@ -77,45 +77,73 @@
     font-size: 15.5px; font-weight: 600; letter-spacing: -0.2px;
   }
   .nav-links {
-    display: flex; gap: 4px;
+    display: flex; gap: 6px;
     flex: 1;
     margin: 0 32px;
   }
   .nav-links a {
-    padding: 8px 16px;
+    display: inline-flex; align-items: center;
+    height: 34px;
+    padding: 0 16px;
     border-radius: 7px;
     color: var(--ink-2);
     text-decoration: none;
     font-size: 13.5px;
     font-weight: 500;
-    transition: background .15s, color .15s;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.55);
+    transition: background .2s, color .2s, border-color .2s;
   }
-  .nav-links a:hover { background: var(--line-2); color: var(--ink); }
+  .nav-links a:hover { background: var(--line-2); color: var(--ink); border-color: var(--ink-3); }
   .nav-links a.active {
     background: var(--ink); color: #fff;
     font-weight: 700;
+    border-color: var(--ink);
   }
-  .nav-tools { display: flex; align-items: center; gap: 10px; }
+  .nav-tools { display: flex; align-items: center; gap: 6px; }
   .nav-btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 7px 12px;
-    background: #fff;
+    background: rgba(255,255,255,0.55);
     border: 1px solid var(--line);
-    border-radius: 8px;
-    font-size: 13px;
+    border-radius: 7px;
+    font-size: 13.5px;
     font-family: inherit;
     color: var(--ink-2);
     cursor: pointer;
-    transition: background .15s, color .15s, border-color .15s;
+    transition: background .2s, color .2s, border-color .2s;
   }
   .nav-btn:hover {
     background: var(--line-2);
     color: var(--ink);
     border-color: var(--ink-3);
   }
-  .nav-btn svg { color: var(--ink-3); transition: color .15s; }
+  .nav-btn svg { color: var(--ink-2); transition: color .2s; }
   .nav-btn:hover svg { color: var(--ink); }
   .nav-btn--icon { width: 34px; height: 34px; padding: 0; justify-content: center; }
+  .nav-btn[data-tip] { position: relative; }
+  .nav-btn[data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    top: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-3px);
+    background: var(--ink);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 5px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s, transform .15s;
+    z-index: 100;
+  }
+  .nav-btn[data-tip]:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
   .nav-search {
     display: flex; align-items: center; gap: 8px;
     background: #fff;
@@ -409,12 +437,12 @@
     align-items: start;
   }
   .v-card {
-    background: var(--panel);
+    background: linear-gradient(180deg, #f5f8fc 0%, #ffffff 100%);
     border: 1px solid var(--line);
     border-radius: 14px;
     padding: 16px 18px 14px;
     position: relative;
-    transition: border-color .2s, transform .2s, box-shadow .2s, background .2s;
+    transition: border-color .35s ease, transform .35s ease, box-shadow .35s ease, background .35s ease;
     display: flex;
     flex-direction: column;
   }
@@ -422,7 +450,7 @@
     border-color: var(--vertical);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px -12px rgba(44,74,122,0.25);
-    background: linear-gradient(180deg, #ffffff 0%, #eef3fa 100%);
+    background: linear-gradient(180deg, #e8f0fa 0%, #eef3fa 100%);
   }
   /* full-card click target */
   .v-card .name.agent-link::after {
@@ -446,15 +474,13 @@
     display: block;
     color: var(--ink);
     text-decoration: none;
-    background: linear-gradient(180deg, #f5f8fc 0%, #ffffff 100%);
+    background: transparent;
     border-top-left-radius: 14px;
     border-top-right-radius: 14px;
-    transition: color .15s, background .15s;
+    transition: color .35s ease;
   }
   .v-card:hover { cursor: pointer; }
-  .v-card:hover .name { background: linear-gradient(180deg, #edf2fa 0%, #f4f7fc 100%); }
   .h-card:hover { cursor: pointer; }
-  .h-card:hover .name { background: linear-gradient(180deg, #e8f3ef 0%, #f0f7f4 100%); }
   /* Title accent line */
   .title-accent {
     height: 2px;
@@ -605,19 +631,19 @@
     gap: 12px;
   }
   .h-card {
-    background: #fff;
+    background: linear-gradient(180deg, #f3f7f5 0%, #ffffff 100%);
     border: 1px solid var(--line);
     border-radius: 10px;
     padding: 12px 14px 12px;
     position: relative;
-    transition: border-color .2s, transform .2s, box-shadow .2s, background .2s;
+    transition: border-color .35s ease, transform .35s ease, box-shadow .35s ease, background .35s ease;
     display: flex; flex-direction: column;
   }
   .h-card:hover {
     border-color: var(--horizontal);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px -12px rgba(31,107,94,0.25);
-    background: linear-gradient(180deg, #ffffff 0%, #ebf3f0 100%);
+    background: linear-gradient(180deg, #e3eeea 0%, #ebf3f0 100%);
   }
   /* full-card click target */
   .h-card .name.agent-link::after {
@@ -652,10 +678,10 @@
     display: block;
     color: var(--ink);
     text-decoration: none;
-    background: linear-gradient(180deg, #f3f7f5 0%, #ffffff 100%);
+    background: transparent;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    transition: color .15s, background .15s;
+    transition: color .35s ease;
   }
   .v-card .name.agent-link:hover { color: var(--vertical); }
   .h-card .name.agent-link:hover { color: var(--horizontal); }
@@ -868,13 +894,16 @@
   /* --- 我的项目 nav dropdown --- */
   .nav-extra { display: flex; align-items: center; gap: 6px; margin-right: 16px; }
   .nav-link-btn {
-    padding: 7px 14px; border-radius: 7px; border: none; background: none;
+    display: inline-flex; align-items: center;
+    height: 34px;
+    padding: 0 14px; border-radius: 7px;
+    border: 1px solid var(--line); background: rgba(255,255,255,0.55);
     font-size: 13.5px; font-weight: 500; color: var(--ink-2);
     font-family: inherit; cursor: pointer;
-    transition: background .15s, color .15s; white-space: nowrap;
+    transition: background .2s, color .2s, border-color .2s; white-space: nowrap;
   }
-  .nav-link-btn:hover { background: var(--line-2); color: var(--ink); }
-  .nav-link-btn.active { background: var(--ink); color: #fff; font-weight: 700; }
+  .nav-link-btn:hover { background: var(--line-2); color: var(--ink); border-color: var(--ink-3); }
+  .nav-link-btn.active { background: var(--ink); color: #fff; font-weight: 700; border-color: var(--ink); }
   .my-proj-wrap { position: relative; }
   .my-proj-dropdown {
     display: none; position: absolute; top: calc(100% + 8px); left: 0;
@@ -1279,7 +1308,7 @@
     border-radius: 14px;
     box-shadow: 0 10px 32px -6px rgba(0,0,0,.16);
     width: 130px;
-    overflow: hidden;
+    overflow: visible;
     z-index: 50;
   }
   .skill-picker.open { display: block; }
@@ -1308,6 +1337,19 @@
     transition: background .12s;
   }
   .skill-picker-item:hover { background: var(--line-2); }
+  #spTip {
+    position: fixed;
+    background: var(--ink);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+  }
   .sp-actions {
     padding: 6px;
     border-top: 1px solid var(--line-2);
@@ -1727,7 +1769,7 @@
       <a href="#">智能作业</a>
     </nav>
     <div class="nav-extra">
-      <button class="nav-link-btn" id="skillsNavBtn" onclick="openSkillsModal()">SKILLS</button>
+      <button class="nav-link-btn" id="skillsNavBtn" onclick="openSkillsModal()">技能集</button>
       <div class="my-proj-wrap" id="myProjWrap">
         <button class="nav-link-btn" onclick="toggleMyProjects(event)">我的项目 <svg style="vertical-align:-1px" viewBox="0 0 10 6" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg></button>
         <div class="my-proj-dropdown" id="myProjDropdown">
@@ -1763,14 +1805,14 @@
       </div>
     </div>
     <div class="nav-tools">
-      <button class="nav-btn nav-btn--icon" type="button" title="帮助">
+      <button class="nav-btn nav-btn--icon" type="button" data-tip="帮助">
         <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="8" cy="8" r="6.4"></circle>
           <path d="M6.2 6.3 a1.8 1.8 0 0 1 3.5 0.5 c0 1-1.7 1.4-1.7 2.5"></path>
           <circle cx="8" cy="11.6" r="0.4" fill="currentColor" stroke="none"></circle>
         </svg>
       </button>
-      <button class="nav-btn nav-btn--icon" type="button" title="反馈">
+      <button class="nav-btn nav-btn--icon" type="button" data-tip="反馈">
         <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M2.5 3.2 h11 a1 1 0 0 1 1 1 v6.4 a1 1 0 0 1-1 1 H8.7 L6.2 13.7 v-2.1 H2.5 a1 1 0 0 1-1-1 V4.2 a1 1 0 0 1 1-1 z"></path>
           <line x1="4.5" y1="6.4" x2="11.5" y2="6.4"></line>
@@ -1899,7 +1941,7 @@
         <div class="h-card">
           <a class="name agent-link" href="#" onclick="return false;">评估规划智能体</a>
         <div class="title-accent"></div>
-          <div class="skills-label">技能实例</div>
+          <div class="skills-label">智能体实例</div>
           <div class="skills">
             <div class="skill"><span class="label"><span class="s-status"></span>系统评估</span></div>
             <div class="skill"><span class="label"><span class="s-status"></span>需求分析</span></div>
@@ -1915,7 +1957,7 @@
         <div class="h-card">
           <a class="name agent-link" href="#" onclick="return false;">网络分析智能体</a>
         <div class="title-accent"></div>
-          <div class="skills-label">技能实例</div>
+          <div class="skills-label">智能体实例</div>
           <div class="skills">
             <div class="skill featured"><span class="label"><span class="s-status"></span>解析还原（华为）</span></div>
             <div class="skill"><span class="label"><span class="s-status"></span>解析还原（多厂商）</span></div>
@@ -1931,7 +1973,7 @@
         <div class="h-card">
           <a class="name agent-link" href="#" onclick="return false;">方案设计智能体</a>
         <div class="title-accent"></div>
-          <div class="skills-label">技能实例</div>
+          <div class="skills-label">智能体实例</div>
           <div class="skills">
             <div class="skill"><span class="label"><span class="s-status"></span>需求分析</span></div>
             <div class="skill"><span class="label"><span class="s-status"></span>BoQ 解析</span></div>
@@ -1948,7 +1990,7 @@
         <div class="h-card">
           <a class="name agent-link" href="#" onclick="return false;">MOP 生成智能体</a>
         <div class="title-accent"></div>
-          <div class="skills-label">技能实例</div>
+          <div class="skills-label">智能体实例</div>
           <div class="skills">
             <div class="skill featured"><span class="label"><span class="s-status"></span>DD 解析</span></div>
             <div class="skill"><span class="label"><span class="s-status"></span>拓扑生成</span></div>
@@ -1964,7 +2006,7 @@
         <div class="h-card">
           <a class="name agent-link" href="#" onclick="return false;">配置验证智能体</a>
         <div class="title-accent"></div>
-          <div class="skills-label">技能实例</div>
+          <div class="skills-label">智能体实例</div>
           <div class="skills">
             <div class="skill"><span class="label"><span class="s-status"></span>语法核查</span></div>
             <div class="skill"><span class="label"><span class="s-status"></span>语义核查</span></div>
@@ -1979,7 +2021,7 @@
         <div class="h-card">
           <a class="name agent-link" href="#" onclick="return false;">业务比对智能体</a>
         <div class="title-accent"></div>
-          <div class="skills-label">技能实例</div>
+          <div class="skills-label">智能体实例</div>
           <div class="skills">
             <div class="skill"><span class="label"><span class="s-status"></span>自动化下发</span></div>
             <div class="skill"><span class="label"><span class="s-status"></span>特性级业务比对</span></div>
@@ -2109,12 +2151,6 @@
                   <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>
                 </span>
                 添加技能
-              </div>
-              <div class="skill-picker-item" onclick="switchToSkillsTab()">
-                <span class="sp-action-icon">
-                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="14" height="9" rx="1.5"></rect><path d="M5 5 V3.5 a3 3 0 0 1 6 0 V5"></path></svg>
-                </span>
-                管理技能
               </div>
             </div>
           </div>
@@ -2247,8 +2283,8 @@
         <div class="sk-main">
           <div class="sk-topbar">
             <div class="sk-search"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"></circle><line x1="10.5" y1="10.5" x2="14" y2="14"></line></svg><input id="skSearch" type="text" placeholder="按名称、描述或关键词搜索…"></div>
-            <button class="sk-btn" onclick="document.getElementById('csOverlay').classList.add('open')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>Create Skill</button>
-            <button class="sk-btn sk-btn-primary" onclick="alert('Submit Skill — 即将上线')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="11" x2="7" y2="3"></line><polyline points="4,6 7,3 10,6"></polyline><line x1="2" y1="11" x2="12" y2="11"></line></svg>Submit Skill</button>
+            <button class="sk-btn" onclick="document.getElementById('csOverlay').classList.add('open')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>创建技能</button>
+            <button class="sk-btn sk-btn-primary" onclick="alert('提交技能 — 即将上线')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="11" x2="7" y2="3"></line><polyline points="4,6 7,3 10,6"></polyline><line x1="2" y1="11" x2="12" y2="11"></line></svg>提交技能</button>
           </div>
           <div class="sk-cards-wrap"><div class="sk-grid" id="skGrid"></div></div>
         </div>
@@ -2696,8 +2732,9 @@
     var spList = document.getElementById('spSkillList');
     if (spList) {
       if (activeSkills.length) {
-        spList.innerHTML = activeSkills.map(function (s) {
-          return '<div class="skill-picker-item">' +
+        spList.innerHTML = activeSkills.map(function(s) {
+          var safeAttr = s.replace(/"/g, '&quot;');
+          return '<div class="skill-picker-item" data-tip="' + safeAttr + '">' +
             '<span class="sp-skill-name">' + s + '</span>' +
             '<span class="sp-remove" onclick="removeSkill(\'' + s.replace(/'/g,"\\'") + '\')">×</span></div>';
         }).join('');
@@ -2758,6 +2795,31 @@
     el.style.height = 'auto';
     el.style.height = Math.min(el.scrollHeight, 120) + 'px';
   }
+</script>
+
+<div id="spTip"></div>
+<script>
+  (function() {
+    var tip = document.getElementById('spTip');
+    document.addEventListener('mouseover', function(e) {
+      var item = e.target.closest && e.target.closest('[data-tip]');
+      if (item) {
+        tip.textContent = item.getAttribute('data-tip');
+        tip.style.display = 'block';
+      }
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (tip.style.display === 'block') {
+        tip.style.left = (e.clientX + 14) + 'px';
+        tip.style.top = (e.clientY - 32) + 'px';
+      }
+    });
+    document.addEventListener('mouseout', function(e) {
+      if (e.target.closest && e.target.closest('[data-tip]')) {
+        tip.style.display = 'none';
+      }
+    });
+  })();
 </script>
 
 </body></html>
