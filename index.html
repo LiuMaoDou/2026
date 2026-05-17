@@ -1,0 +1,2763 @@
+<!DOCTYPE html><html lang="zh-CN" data-immersive-translate-page-theme="light"><head>
+
+
+<meta charset="UTF-8">
+<title>数通智能体 · 工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --panel: #ffffff;
+    --ink: #1a1d24;
+    --ink-2: #4a5160;
+    --ink-3: #8a92a3;
+    --ink-mute: #adb2bd;
+    --line: #e2e5ec;
+    --line-2: #eceef3;
+    --vertical: #2c4a7a;
+    --vertical-soft: #e8edf6;
+    --vertical-tint: #f4f6fb;
+    --horizontal: #1f6b5e;
+    --horizontal-soft: #e2f0ec;
+    --horizontal-tint: #f1f7f5;
+    --accent: #c25a3f;
+    --item-bg: #ffffff;
+    --item-bd: #d8dde6;
+    --item-hover: #f7f9fc;
+    --status-live: #2f8a5b;
+    --status-off-bg: #f0f2f5;
+    --status-off-bd: #d6dae2;
+    --status-off-ink: #a8aeba;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Ubuntu", "Microsoft YaHei", "微软雅黑", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .shell {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 0 36px 20px;
+  }
+
+  /* ---- Top nav ---- */
+  #shared-nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--bg);
+    padding-bottom: 0;
+  }
+  .topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    margin: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
+  .nav-mark {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: var(--ink);
+    color: #fff;
+    display: grid; place-items: center;
+  }
+  .nav-brand-text {
+    font-size: 15.5px; font-weight: 600; letter-spacing: -0.2px;
+  }
+  .nav-links {
+    display: flex; gap: 4px;
+    flex: 1;
+    margin: 0 32px;
+  }
+  .nav-links a {
+    padding: 8px 16px;
+    border-radius: 7px;
+    color: var(--ink-2);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+  }
+  .nav-links a:hover { background: var(--line-2); color: var(--ink); }
+  .nav-links a.active {
+    background: var(--ink); color: #fff;
+    font-weight: 700;
+  }
+  .nav-tools { display: flex; align-items: center; gap: 10px; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .nav-btn:hover {
+    background: var(--line-2);
+    color: var(--ink);
+    border-color: var(--ink-3);
+  }
+  .nav-btn svg { color: var(--ink-3); transition: color .15s; }
+  .nav-btn:hover svg { color: var(--ink); }
+  .nav-btn--icon { width: 34px; height: 34px; padding: 0; justify-content: center; }
+  .nav-search {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 7px 12px;
+    border-radius: 8px;
+    width: 240px;
+    font-size: 12.5px;
+    color: var(--ink-3);
+  }
+  .nav-search .search-ico { font-size: 14px; }
+  .nav-avatar-wrap {
+    position: relative;
+  }
+  .nav-avatar {
+    height: 32px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #b9c4d6, #6c7892);
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 10px;
+    color: #fff; font-size: 11.5px; font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity .15s;
+  }
+  .nav-avatar:hover { opacity: .85; }
+  .nav-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px -4px rgba(0,0,0,.12);
+    min-width: 148px;
+    padding: 6px;
+    z-index: 100;
+  }
+  .nav-dropdown.open { display: block; }
+  .nav-dropdown-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--ink-2);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .12s, color .12s;
+  }
+  .nav-dropdown-item:hover { background: var(--line-2); color: var(--ink); }
+  .nav-dropdown-item--muted { color: var(--ink-3); }
+  .nav-dropdown-item--muted:hover { color: var(--accent); background: #fdf3f0; }
+  .nav-dropdown-sep { height: 1px; background: var(--line-2); margin: 4px 0; }
+  .nav-dropdown-item--lang {
+    display: flex; align-items: center;
+    position: relative;
+    cursor: default;
+  }
+  .nav-dropdown-item--lang:hover { background: var(--line-2); color: var(--ink); border-radius: 6px; }
+  .nav-submenu {
+    display: none;
+    position: absolute;
+    right: calc(100% + 6px);
+    top: -6px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px -4px rgba(0,0,0,.12);
+    min-width: 110px;
+    padding: 6px;
+    z-index: 101;
+  }
+  .nav-dropdown-item--lang:hover .nav-submenu { display: block; }
+  .nav-submenu-item { gap: 8px; }
+  .lang-active { color: var(--ink); font-weight: 600; }
+
+  /* ---- Top banner ---- */
+  .banner {
+    background:
+      radial-gradient(120% 160% at 100% 0%, rgba(44,74,122,0.10), transparent 55%),
+      linear-gradient(135deg, #1a1d24 0%, #2c3447 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
+  }
+  .banner-left { display: flex; align-items: center; gap: 16px; }
+  .banner-mark {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.16);
+    display: grid; place-items: center;
+    font-weight: 600; font-size: 15px; letter-spacing: -0.5px;
+  }
+  .banner-title { font-size: 19px; font-weight: 600; letter-spacing: -0.3px; }
+  .banner-sub { font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px; letter-spacing: 2px; }
+
+  .banner-stats {
+    display: flex; align-items: center; gap: 18px;
+  }
+  .bs { min-width: 92px; text-align: left; }
+  .bs-v {
+    font-size: 22px; font-weight: 600; letter-spacing: -0.6px;
+    font-feature-settings: "tnum";
+    line-height: 1;
+  }
+  .bs-u { font-size: 12px; color: rgba(255,255,255,0.65); margin-left: 3px; font-weight: 500; }
+  .bs-l { font-size: 11.5px; color: rgba(255,255,255,0.55); margin-top: 7px; letter-spacing: 0.3px; }
+  .bs-div { width: 1px; height: 32px; background: rgba(255,255,255,0.12); }
+
+  /* ---- Top bar ---- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    background: var(--ink);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.5px;
+  }
+  .brand-name {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .brand-sub {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .nav {
+    display: flex;
+    gap: 28px;
+    font-size: 13.5px;
+    color: var(--ink-2);
+  }
+  .nav a { color: inherit; text-decoration: none; padding: 6px 0; border-bottom: 2px solid transparent; }
+  .nav a.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .nav a:hover { color: var(--ink); }
+  .right-tools { display: flex; align-items: center; gap: 18px; color: var(--ink-2); font-size: 13px; }
+  .search {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border: 1px solid var(--line);
+    padding: 7px 12px; border-radius: 8px; width: 220px;
+    color: var(--ink-3); font-size: 13px;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #b9c4d6, #6c7892);
+    display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 600;
+  }
+
+  /* ---- Hero ---- */
+  .hero {
+    display: block;
+    margin-bottom: 32px;
+  }
+  .hero-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 28px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-card.primary {
+    background:
+      radial-gradient(120% 140% at 100% 0%, rgba(44,74,122,0.08), transparent 55%),
+      var(--panel);
+  }
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    line-height: 1.25;
+    margin: 0 0 12px;
+  }
+  .hero-desc {
+    color: var(--ink-2);
+    font-size: 13.5px;
+    max-width: 580px;
+    margin: 0 0 22px;
+  }
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 4px;
+  }
+  .kpi {
+    border-left: 2px solid var(--line);
+    padding: 4px 0 4px 14px;
+  }
+  .kpi .v {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    font-feature-settings: "tnum";
+  }
+  .kpi .l {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 4px;
+  }
+  .kpi .v .unit { font-size: 13px; color: var(--ink-2); margin-left: 2px; font-weight: 500; }
+
+  .status-card .row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--line);
+    font-size: 13px;
+  }
+  .status-card .row:last-child { border-bottom: 0; }
+  .status-card .row .name { color: var(--ink-2); }
+  .status-card .row .meta { color: var(--ink-3); font-size: 12px; }
+  .status-card .row .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; color: var(--ink-2);
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--status-live); display: inline-block; }
+  .dot.dev { background: var(--status-dev); }
+  .dot.plan { background: var(--status-plan); }
+
+  /* ---- Section header ---- */
+  .section {
+    margin-top: 40px;
+  }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .section-head .title {
+    display: flex; align-items: baseline; gap: 14px;
+  }
+  .section-head h2 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+    margin: 0;
+    padding-left: 12px;
+    border-left: 3px solid var(--ink);
+    line-height: 1.2;
+  }
+  .section.vertical-section .section-head h2 { border-left-color: var(--vertical); color: var(--vertical); }
+  .section.horizontal-section .section-head h2 { border-left-color: var(--horizontal); color: var(--horizontal); }
+  .section-head .ch-tag {
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 4px;
+  }
+  .section-head .actions { font-size: 12.5px; color: var(--ink-3); display: flex; gap: 18px; }
+  .legend { display: flex; gap: 14px; font-size: 11.5px; color: var(--ink-3); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ---- Vertical agents ---- */
+  .vertical-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+  .v-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px 14px;
+    position: relative;
+    transition: border-color .2s, transform .2s, box-shadow .2s, background .2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .v-card:hover {
+    border-color: var(--vertical);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -12px rgba(44,74,122,0.25);
+    background: linear-gradient(180deg, #ffffff 0%, #eef3fa 100%);
+  }
+  /* full-card click target */
+  .v-card .name.agent-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  .v-card .project-list,
+  .v-card .v-foot,
+  .v-card .projects-label {
+    position: relative;
+    z-index: 2;
+  }
+  .v-card .name {
+    font-size: 17px; font-weight: 600; letter-spacing: -0.2px;
+    margin: -16px -18px 0;
+    padding: 14px 18px 8px;
+    text-align: center;
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    background: linear-gradient(180deg, #f5f8fc 0%, #ffffff 100%);
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px;
+    transition: color .15s, background .15s;
+  }
+  .v-card:hover { cursor: pointer; }
+  .v-card:hover .name { background: linear-gradient(180deg, #edf2fa 0%, #f4f7fc 100%); }
+  .h-card:hover { cursor: pointer; }
+  .h-card:hover .name { background: linear-gradient(180deg, #e8f3ef 0%, #f0f7f4 100%); }
+  /* Title accent line */
+  .title-accent {
+    height: 2px;
+    width: 32px;
+    margin: 0 auto 14px;
+    border-radius: 1px;
+    background: var(--ink);
+    position: relative;
+    z-index: 2;
+  }
+  .vertical-section .title-accent { background: var(--vertical); }
+  .horizontal-section .title-accent { background: var(--horizontal); }
+  .v-card .desc {
+    font-size: 12.5px; color: var(--ink-3);
+    margin: 0 0 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-2);
+    min-height: 36px;
+  }
+  .v-foot {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line-2);
+    display: flex; justify-content: space-between;
+    font-size: 12.5px; color: var(--ink-3);
+    letter-spacing: 0.3px;
+  }
+  .v-card .head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .v-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    background: var(--vertical-soft);
+    color: var(--vertical);
+    display: grid; place-items: center;
+    font-size: 13px; font-weight: 700; letter-spacing: -0.5px;
+  }
+  .v-card .stat-row {
+    display: flex; gap: 22px;
+    padding: 12px 0 14px;
+    border-top: 1px solid var(--line-2);
+    border-bottom: 1px solid var(--line-2);
+    margin-bottom: 14px;
+  }
+  .v-card .stat-row .s-v { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+  .v-card .stat-row .s-l { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+  .projects-label {
+    font-size: 12px; letter-spacing: 1.5px;
+    color: var(--ink-3); font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .project-list { display: flex; flex-direction: column; gap: 6px; }
+  .project-chip {
+    text-decoration: none;
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 12px;
+    background: linear-gradient(180deg, #ffffff 0%, #f3f6fb 100%);
+    border: 1px solid var(--item-bd);
+    border-left: 2px solid var(--vertical);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .project-chip:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #eaf0f9 100%);
+    border-color: var(--vertical);
+    border-left-color: var(--vertical);
+    transform: translateX(2px);
+    box-shadow: 0 1px 4px rgba(44,74,122,0.10);
+  }
+  .project-chip:has(.p-dot.dev),
+  .project-chip:has(.p-dot.plan) {
+    background: var(--status-off-bg);
+    border: 1px dashed var(--status-off-bd);
+    color: var(--status-off-ink);
+    cursor: not-allowed;
+    font-style: italic;
+  }
+  .project-chip:has(.p-dot.dev):hover,
+  .project-chip:has(.p-dot.plan):hover {
+    background: var(--status-off-bg);
+    border: 1px dashed var(--status-off-bd);
+    transform: none;
+    box-shadow: none;
+  }
+  .p-dot { display: none; }
+  .v-more-body {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 8px 8px 6px;
+    text-align: center;
+    gap: 12px;
+  }
+  .v-more-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: var(--vertical-soft);
+    color: var(--vertical);
+    display: grid; place-items: center;
+  }
+  .v-more-desc {
+    font-size: 12.5px; color: var(--ink-3);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .v-more-link {
+    font-size: 12.5px; color: var(--vertical); font-weight: 600;
+  }
+  .project-chip--more {
+    display: flex; align-items: center; justify-content: center;
+    padding: 7px 12px;
+    background: var(--vertical-tint);
+    border: 1px dashed var(--vertical);
+    border-left: 2px dashed var(--vertical);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--vertical);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    margin-top: 2px;
+  }
+  .project-chip--more:hover { background: var(--vertical-soft); }
+
+
+  /* ---- Horizontal agents ---- */
+  .horizontal-pipeline {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 22px 14px;
+  }
+  .pipeline-flow {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 0 8px;
+  }
+  .flow-step { font-size: 11.5px; color: var(--ink-3); letter-spacing: 1px; }
+  .flow-arrow { color: var(--line); font-size: 14px; }
+
+  .h-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+  .h-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px 12px;
+    position: relative;
+    transition: border-color .2s, transform .2s, box-shadow .2s, background .2s;
+    display: flex; flex-direction: column;
+  }
+  .h-card:hover {
+    border-color: var(--horizontal);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -12px rgba(31,107,94,0.25);
+    background: linear-gradient(180deg, #ffffff 0%, #ebf3f0 100%);
+  }
+  /* full-card click target */
+  .h-card .name.agent-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  .h-card .skills,
+  .h-card .h-foot,
+  .h-card .skills-label {
+    position: relative;
+    z-index: 2;
+  }
+  .h-card .h-head { display: flex; align-items: center; gap: 9px; margin-bottom: 4px; }
+  .h-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: var(--horizontal-soft);
+    color: var(--horizontal);
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .h-card .num { font-size: 10.5px; color: var(--ink-3); letter-spacing: 1px; }
+  .h-card .name {
+    font-size: 17px; font-weight: 600;
+    margin: -12px -14px 0;
+    padding: 10px 14px 8px;
+    letter-spacing: -0.2px;
+    text-align: center;
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    background: linear-gradient(180deg, #f3f7f5 0%, #ffffff 100%);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: color .15s, background .15s;
+  }
+  .v-card .name.agent-link:hover { color: var(--vertical); }
+  .h-card .name.agent-link:hover { color: var(--horizontal); }
+  .skills-label {
+    font-size: 12px; letter-spacing: 1.5px;
+    color: var(--ink-3); font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  .skills { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .skill {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    background: linear-gradient(180deg, #ffffff 0%, #f1f6f4 100%);
+    color: var(--ink);
+    border: 1px solid var(--item-bd);
+    border-left: 2px solid var(--horizontal);
+    text-decoration: none;
+    cursor: default;
+  }
+  .skill.dev, .skill.plan {
+    background: var(--status-off-bg);
+    border: 1px dashed var(--status-off-bd);
+    color: var(--status-off-ink);
+    font-style: italic;
+  }
+  .skill .arrow { display: none; }
+  .skill .s-status { display: none; }
+  .skill .label { display: flex; align-items: center; gap: 8px; }
+  .h-foot {
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px dashed var(--line-2);
+    display: flex; justify-content: space-between;
+    font-size: 12.5px; color: var(--ink-3);
+  }
+
+  /* ---- Footer info ---- */
+  .footer-info {
+    margin-top: 28px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 22px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12.5px; color: var(--ink-2);
+  }
+  .footer-info .left { display: flex; gap: 28px; }
+  .footer-info b { color: var(--ink); font-weight: 600; }
+
+  .badge-corner {
+    position: absolute; top: 16px; right: 18px;
+    font-size: 10.5px; color: var(--ink-3); letter-spacing: 1px;
+  }
+
+  /* arrow connector between sections */
+  .connector {
+    height: 26px;
+    display: flex; justify-content: center; align-items: center;
+    color: var(--ink-3); font-size: 11px; letter-spacing: 3px;
+    position: relative;
+  }
+  .connector::before, .connector::after {
+    content: ""; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line) 30%, var(--line) 70%, transparent);
+    margin: 0 14px;
+  }
+
+  /* ---- Footer ---- */
+  .site-footer {
+    margin-top: 24px;
+    padding: 10px 22px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 12.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.2px;
+  }
+  .site-footer .footer-brand {
+    color: var(--ink-2);
+    font-weight: 600;
+    letter-spacing: -0.1px;
+  }
+  .site-footer b { color: var(--ink-2); font-weight: 600; }
+  .site-footer .footer-sep { opacity: 0.5; margin: 0 4px; }
+  .site-footer .footer-left,
+  .site-footer .footer-right {
+    display: flex; align-items: center; gap: 2px;
+  }
+  .site-footer .footer-mid {
+    flex: 1;
+    text-align: center;
+    color: var(--ink-3);
+  }
+
+  /* ========== Project Agent Page ========== */
+  .page { display: none; padding-top: 16px; }
+  .page.active { display: block; }
+
+  body:has(#page-project.active) { overflow: hidden; }
+
+  #page-project { padding-bottom: 16px; }
+
+  .project-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 16px;
+    height: calc(100vh - 120px);
+    min-height: 400px;
+  }
+
+  /* Sidebar */
+  .proj-sidebar {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+  }
+  .session-list {
+    display: flex; flex-direction: column; gap: 1px;
+    overflow-y: auto; flex: 1; min-height: 0;
+    margin: 0 -2px; padding: 0 2px;
+  }
+  .session-item {
+    display: flex; align-items: center; gap: 7px;
+    padding: 7px 12px; border-radius: 8px;
+    font-size: 12px; color: var(--ink-2);
+    cursor: pointer; transition: background .12s, color .12s;
+    white-space: nowrap; overflow: hidden; flex-shrink: 0;
+  }
+  .session-item:hover { background: var(--line-2); color: var(--ink); }
+  .session-item.active { background: rgba(44,74,122,0.07); color: var(--vertical); font-weight: 600; }
+  .session-item.h-active { background: rgba(31,107,94,0.07); color: var(--horizontal); font-weight: 600; }
+  .session-item.h-active svg { opacity: .8; }
+  .proj-sidebar-label { font-size: 10.5px; font-weight: 700; color: var(--ink-3); letter-spacing: 1px; text-transform: uppercase; padding: 6px 14px 2px; flex-shrink: 0; text-align: center; }
+  .session-item svg { flex-shrink: 0; opacity: .45; }
+  .session-item.active svg { opacity: .8; }
+  .session-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+  .session-more-btn {
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 5px 12px; border-radius: 8px;
+    font-size: 11.5px; color: var(--ink-3);
+    cursor: pointer; border: none; background: none;
+    font-family: inherit; width: 100%;
+    transition: background .12s, color .12s; flex-shrink: 0;
+  }
+  .session-more-btn:hover { background: var(--line-2); color: var(--ink); }
+  .session-list.collapsed { display: none; }
+  .hist-chevron { margin-left: auto; flex-shrink: 0; opacity: .4; transition: transform .2s; }
+  .hist-chevron.rotated { transform: rotate(-90deg); }
+  /* --- Sidebar sections --- */
+  .sb-sec-hd {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 12px; border-radius: 8px; width: 100%;
+    border: none; background: none; cursor: pointer;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    font-family: inherit; letter-spacing: -0.2px;
+    transition: background .12s, color .12s; flex-shrink: 0;
+    text-align: left;
+  }
+  .sb-sec-hd:hover { background: var(--line-2); color: var(--ink); }
+  .sb-sec-body { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; overflow: hidden; }
+  .sb-sec-body.collapsed { display: none; }
+  .sb-agent-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px 6px 14px; border-radius: 7px;
+    font-size: 13px; color: var(--ink); cursor: pointer;
+    transition: background .12s, color .12s; flex-shrink: 0;
+  }
+  .sb-agent-item:hover { background: var(--line-2); color: var(--ink); }
+  .sb-agent-item.active { background: rgba(31,107,94,.09); color: var(--horizontal); font-weight: 600; }
+  .sb-agent-emoji { font-size: 14px; flex-shrink: 0; }
+  .sb-agent-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* --- Skills modal overlay --- */
+  @keyframes modal-in { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: scale(1); } }
+  .skills-modal { display: none; position: fixed; inset: 0; z-index: 300; }
+  .skills-modal.open { display: flex; align-items: center; justify-content: center; }
+  .skills-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.32); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .skills-modal-panel {
+    position: relative; z-index: 1;
+    background: var(--bg);
+    width: min(92vw, 1100px); height: min(88vh, 740px);
+    display: flex; flex-direction: column; overflow: hidden;
+    border-radius: 18px; border: 1px solid var(--line);
+    box-shadow: 0 24px 60px -12px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.06) inset;
+    animation: modal-in .18s ease-out;
+  }
+  .skills-modal-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px 10px; border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .skills-modal-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .skills-modal-close {
+    display: grid; place-items: center; width: 28px; height: 28px;
+    border-radius: 7px; border: 1px solid var(--line); background: none;
+    cursor: pointer; color: var(--ink-2); font-size: 16px; font-family: inherit;
+    transition: background .12s;
+  }
+  .skills-modal-close:hover { background: var(--line-2); }
+  .skills-modal-body { flex: 1; overflow: hidden; }
+  /* --- 我的项目 nav dropdown --- */
+  .nav-extra { display: flex; align-items: center; gap: 6px; margin-right: 16px; }
+  .nav-link-btn {
+    padding: 7px 14px; border-radius: 7px; border: none; background: none;
+    font-size: 13.5px; font-weight: 500; color: var(--ink-2);
+    font-family: inherit; cursor: pointer;
+    transition: background .15s, color .15s; white-space: nowrap;
+  }
+  .nav-link-btn:hover { background: var(--line-2); color: var(--ink); }
+  .nav-link-btn.active { background: var(--ink); color: #fff; font-weight: 700; }
+  .my-proj-wrap { position: relative; }
+  .my-proj-dropdown {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0;
+    width: 280px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; box-shadow: 0 8px 32px -8px rgba(0,0,0,.18);
+    z-index: 200; overflow: hidden;
+  }
+  .my-proj-dropdown.open { display: block; }
+  .my-proj-folder {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 16px 6px; font-size: 11px; font-weight: 700;
+    color: var(--ink-3); letter-spacing: .5px; text-transform: uppercase;
+  }
+  .my-proj-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 16px 7px 32px; font-size: 13px; color: var(--ink-2);
+    cursor: pointer; transition: background .1s, color .1s;
+    text-decoration: none;
+  }
+  .my-proj-item:hover { background: var(--line-2); color: var(--ink); }
+  .my-proj-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); flex-shrink: 0; }
+  .my-proj-sep { height: 1px; background: var(--line); margin: 4px 0; }
+  /* sidebar section header row (toggle + action button) */
+  .sb-sec-hd-row { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+  .sb-sec-hd-row .sb-sec-hd { flex: 1; }
+  .sb-create-btn {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    margin: 3px 4px 5px;
+    padding: 7px 12px; border-radius: 7px;
+    border: 1.5px dashed var(--line);
+    font-size: 12px; color: var(--ink-3);
+    cursor: pointer; transition: border-color .15s, color .15s, background .15s;
+  }
+  .sb-create-btn:hover { border-color: var(--vertical); color: var(--vertical); background: var(--vertical-tint); }
+  /* baseline dot decoration */
+  .sb-baseline-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--horizontal); flex-shrink: 0; opacity: .8;
+  }
+  /* agents modal */
+  .agents-modal { display: none; position: fixed; inset: 0; z-index: 300; }
+  .agents-modal.open { display: flex; align-items: center; justify-content: center; }
+  .agents-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.32); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .agents-modal-panel {
+    position: relative; z-index: 1;
+    background: var(--bg);
+    width: min(92vw, 1100px); height: min(88vh, 740px);
+    display: flex; flex-direction: column; overflow: hidden;
+    border-radius: 18px; border: 1px solid var(--line);
+    box-shadow: 0 24px 60px -12px rgba(0,0,0,.28), 0 0 0 1px rgba(255,255,255,.06) inset;
+    animation: modal-in .18s ease-out;
+  }
+  .agents-modal-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px 10px; border-bottom: 1px solid var(--line); flex-shrink: 0;
+  }
+  .agents-modal-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .agents-modal-body { flex: 1; overflow: hidden; }
+  .proj-tab {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 9px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-2);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    width: 100%;
+    text-align: left;
+    transition: background .15s, color .15s;
+  }
+  .proj-tab:hover { background: var(--line-2); color: var(--ink); }
+  .proj-tab.active {
+    background: var(--vertical-soft);
+    color: var(--vertical);
+    font-weight: 600;
+  }
+  .proj-tab svg { flex-shrink: 0; opacity: .7; }
+  .proj-tab.active svg { opacity: 1; }
+  .proj-tab-divider { height: 0; border: none; border-top: 1.5px dashed var(--line); margin: 8px 6px; opacity: .6; }
+
+  /* Main panel */
+  .proj-main {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Tab panes */
+  .tab-pane { display: none; flex-direction: column; flex: 1; overflow: hidden; height: 100%; }
+  .tab-pane.active { display: flex; }
+
+  /* ---- Chat ---- */
+  .chat-header {
+    padding: 16px 22px 14px;
+    border-bottom: 1px solid var(--line-2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .chat-header-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .chat-header-title .ch-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--status-live);
+  }
+  .chat-header-meta { font-size: 12px; color: var(--ink-3); display: flex; gap: 14px; }
+
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    scroll-behavior: smooth;
+  }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-track { background: transparent; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+  /* Welcome state */
+  .chat-welcome {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    padding: 32px;
+    color: var(--ink-3);
+  }
+  .chat-welcome-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    background: var(--vertical-soft);
+    color: var(--vertical);
+    display: grid;
+    place-items: center;
+    margin-bottom: 4px;
+  }
+  .chat-welcome h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink-2);
+    margin: 0;
+  }
+  .chat-welcome p {
+    font-size: 13px;
+    color: var(--ink-3);
+    max-width: 340px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .chat-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .chat-suggestion {
+    padding: 8px 14px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    font-size: 12.5px;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .chat-suggestion:hover {
+    background: var(--vertical-soft);
+    border-color: var(--vertical);
+    color: var(--vertical);
+  }
+
+  /* Message bubbles */
+  .msg { display: flex; gap: 12px; align-items: flex-start; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: grid; place-items: center;
+    font-size: 11px; font-weight: 700;
+  }
+  .msg.assistant .msg-avatar {
+    background: var(--vertical-soft);
+    color: var(--vertical);
+    border-radius: 9px;
+  }
+  .msg.user .msg-avatar {
+    background: linear-gradient(135deg, #b9c4d6, #6c7892);
+    color: #fff;
+    border-radius: 50%;
+  }
+  .msg-body { max-width: 72%; display: flex; flex-direction: column; gap: 4px; }
+  .msg.user .msg-body { align-items: flex-end; }
+  .msg-bubble {
+    padding: 11px 15px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .msg.assistant .msg-bubble {
+    background: var(--bg);
+    border: 1px solid var(--line-2);
+    color: var(--ink);
+    border-radius: 4px 12px 12px 12px;
+  }
+  .msg.user .msg-bubble {
+    background: var(--vertical);
+    color: #fff;
+    border-radius: 12px 4px 12px 12px;
+  }
+  .msg-meta { font-size: 11px; color: var(--ink-mute); padding: 0 4px; }
+
+  /* Skill tag in bubble */
+  .msg-skill-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 9px;
+    background: var(--horizontal-soft);
+    border: 1px solid var(--horizontal-soft);
+    border-radius: 20px;
+    font-size: 11.5px;
+    color: var(--horizontal);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  /* Input area */
+  .chat-input-wrap {
+    padding: 16px 20px 18px;
+    border-top: 1px solid var(--line-2);
+    flex-shrink: 0;
+  }
+  .chat-input-box {
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+    overflow: hidden;
+  }
+  .chat-input-box:focus-within {
+    border-color: var(--vertical);
+    box-shadow: 0 0 0 3px rgba(44,74,122,0.08);
+  }
+  .chat-input-skills {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px 6px;
+    flex-wrap: wrap;
+    min-height: 0;
+  }
+  .chat-active-skill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 8px 3px 10px;
+    background: var(--vertical-soft);
+    border: 1px solid var(--vertical);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--vertical);
+    font-weight: 600;
+  }
+  .chat-active-skill button {
+    background: none; border: none; padding: 0;
+    cursor: pointer; color: var(--vertical);
+    font-size: 13px; line-height: 1;
+    opacity: .6; transition: opacity .1s;
+    display: flex; align-items: center;
+  }
+  .chat-active-skill button:hover { opacity: 1; }
+  .chat-textarea-row {
+    padding: 10px 14px 2px;
+  }
+  .chat-input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px 8px;
+  }
+  .chat-input-spacer { flex: 1; }
+  .chat-new-btn {
+    flex-shrink: 0;
+    padding: 6px 11px 6px 9px;
+    border-radius: 20px;
+    border: 1.5px solid var(--line);
+    background: none;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--ink-3); font-size: 12.5px;
+    transition: border-color .15s, color .15s, background .15s;
+    font-family: inherit;
+  }
+  .chat-new-btn:hover {
+    border-color: var(--vertical);
+    color: var(--vertical);
+    background: var(--vertical-tint);
+  }
+  .chat-attach-btn {
+    flex-shrink: 0;
+    padding: 6px 11px 6px 9px;
+    border-radius: 20px;
+    border: 1.5px solid var(--line);
+    background: none;
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--ink-3); font-size: 12.5px;
+    transition: border-color .15s, color .15s, background .15s;
+    font-family: inherit;
+  }
+  .chat-attach-btn:hover {
+    border-color: var(--vertical);
+    color: var(--vertical);
+    background: var(--vertical-tint);
+  }
+  .chat-skill-btn {
+    flex-shrink: 0;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px 6px 9px;
+    border-radius: 20px;
+    border: 1.5px solid var(--line);
+    background: #fff;
+    cursor: pointer;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    color: var(--ink-2);
+    position: relative;
+    transition: border-color .15s, color .15s, background .15s;
+  }
+  .chat-skill-btn:hover { border-color: var(--vertical); color: var(--vertical); background: var(--vertical-tint); }
+  .chat-skill-badge {
+    position: absolute;
+    top: -7px; right: -7px;
+    min-width: 18px; height: 18px;
+    border-radius: 9px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 10.5px; font-weight: 700;
+    display: none; align-items: center; justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+    border: 1.5px solid #fff;
+  }
+  .chat-textarea {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: transparent;
+    resize: none;
+    line-height: 1.55;
+    max-height: 120px;
+    min-height: 32px;
+    padding: 0;
+    display: block;
+  }
+  .chat-textarea::placeholder { color: var(--ink-mute); }
+  .chat-send {
+    flex-shrink: 0;
+    width: 34px; height: 34px;
+    border-radius: 9px;
+    background: var(--vertical);
+    border: none;
+    cursor: pointer;
+    display: grid; place-items: center;
+    color: #fff;
+    transition: background .15s, transform .1s;
+  }
+  .chat-send:hover { background: #3a5e96; }
+  .chat-send:active { transform: scale(.95); }
+  .chat-send:disabled { background: var(--line); cursor: not-allowed; }
+
+  /* Skill picker popup */
+  /* ---- + picker: cascading menu ---- */
+  .skill-picker {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    box-shadow: 0 10px 32px -6px rgba(0,0,0,.16);
+    width: 130px;
+    overflow: hidden;
+    z-index: 50;
+  }
+  .skill-picker.open { display: block; }
+  .sp-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid var(--line-2);
+  }
+  .sp-header-label {
+    font-size: 11.5px; font-weight: 600; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .sp-header-count {
+    font-size: 11px; font-weight: 700;
+    background: var(--vertical-soft); color: var(--vertical);
+    border-radius: 10px; padding: 1px 7px;
+  }
+  .sp-list { padding: 6px; max-height: 200px; overflow-y: auto; }
+  .skill-picker-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 13px; font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .skill-picker-item:hover { background: var(--line-2); }
+  .sp-actions {
+    padding: 6px;
+    border-top: 1px solid var(--line-2);
+  }
+  .skill-picker-sep { height: 1px; background: var(--line-2); margin: 2px 0; }
+
+  /* row icon (attach / skills) */
+  .sp-row-icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    display: grid; place-items: center; flex-shrink: 0;
+  }
+  .sp-row-icon.attach { background: var(--vertical-soft); color: var(--vertical); }
+  .sp-row-icon.sp-icon-sk { background: var(--horizontal-soft); color: var(--horizontal); }
+
+  /* › chevron */
+  .sp-chevron { margin-left: auto; color: var(--ink-3); opacity: .6; flex-shrink: 0; }
+
+  /* flyout submenu */
+  .skill-picker-item.has-sub::after {
+    content: ''; position: absolute;
+    top: 0; right: -10px; width: 10px; height: 100%;
+  }
+  .skill-picker-submenu {
+    display: none;
+    position: absolute;
+    left: calc(100% + 6px);
+    top: -6px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 8px 28px -4px rgba(0,0,0,.14);
+    min-width: 210px;
+    padding: 6px;
+    z-index: 52;
+  }
+  .skill-picker-item.has-sub:hover .skill-picker-submenu { display: block; }
+
+  /* items inside submenu */
+  .skill-picker-submenu .skill-picker-item { font-weight: 400; }
+  .sp-icon {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: var(--horizontal-soft); color: var(--horizontal);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0;
+  }
+  .sp-action-icon {
+    width: 26px; height: 26px;
+    display: grid; place-items: center;
+    color: var(--ink-2); flex-shrink: 0;
+  }
+  .sp-skill-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 12.5px; color: var(--ink);
+    cursor: default;
+    transition: background .12s;
+  }
+  .sp-skill-row:hover { background: var(--line-2); }
+  .sp-skill-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--horizontal); flex-shrink: 0;
+  }
+  .sp-skill-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sp-skill-remove {
+    flex-shrink: 0;
+    background: none; border: none; padding: 3px 5px;
+    color: var(--ink-mute); cursor: pointer; font-size: 11px;
+    border-radius: 5px; line-height: 1;
+    transition: color .12s, background .12s;
+    opacity: 0;
+  }
+  .sp-skill-row:hover .sp-skill-remove { opacity: 1; }
+  .sp-skill-remove:hover { color: var(--ink); background: var(--line); }
+  .sp-empty {
+    padding: 16px 10px;
+    font-size: 12px; color: var(--ink-3); text-align: center;
+  }
+
+  /* Placeholder panes */
+  .pane-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--ink-3);
+    text-align: center;
+    padding: 40px;
+  }
+  .pane-placeholder svg { opacity: .3; }
+  .pane-placeholder p { font-size: 13px; margin: 0; }
+
+  /* ========== Skills Marketplace ========== */
+  .sk-layout { display: flex; height: 100%; overflow: hidden; }
+
+  /* Sidebar */
+  .sk-sidebar {
+    width: 200px; flex-shrink: 0;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    padding: 14px 10px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .sk-type-tabs { display: flex; gap: 4px; margin-bottom: 4px; }
+  .sk-type-btn {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 8px 6px; border-radius: 8px;
+    font-size: 13px; font-weight: 500; color: var(--ink-2);
+    cursor: pointer; border: none; background: none;
+    font-family: inherit;
+    transition: background .15s, color .15s;
+  }
+  .sk-type-btn:hover { background: var(--line-2); color: var(--ink); }
+  .sk-type-btn.active { background: var(--vertical-soft); color: var(--vertical); font-weight: 700; }
+  .sk-cat-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 12px; border-radius: 8px;
+    font-size: 13px; color: var(--ink-2);
+    cursor: pointer; transition: background .15s, color .15s;
+  }
+  .sk-cat-item:hover { background: var(--line-2); color: var(--ink); }
+  .sk-cat-item.active { background: var(--vertical-soft); color: var(--vertical); font-weight: 600; }
+  .sk-cat-icon { flex-shrink: 0; opacity: .65; }
+  .sk-cat-item.active .sk-cat-icon { opacity: 1; }
+  .sk-cat-count { margin-left: auto; font-size: 11.5px; color: var(--ink-3); }
+  .sk-cat-item.active .sk-cat-count { color: var(--vertical); opacity: .75; }
+  .sk-cat-sep { height: 1px; background: var(--line-2); margin: 6px 4px; }
+
+  /* Main */
+  .sk-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .sk-topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px; border-bottom: 1px solid var(--line-2); flex-shrink: 0;
+  }
+  .sk-search {
+    flex: 1; display: flex; align-items: center; gap: 8px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 13px;
+    color: var(--ink-3); font-size: 13px;
+  }
+  .sk-search input {
+    border: none; background: none; outline: none;
+    font-family: inherit; font-size: 13px; color: var(--ink); width: 100%;
+  }
+  .sk-search input::placeholder { color: var(--ink-3); }
+  .sk-kbd {
+    font-size: 11px; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: 5px;
+    padding: 2px 6px; background: var(--line-2);
+    letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0;
+  }
+  .sk-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 8px;
+    font-size: 12.5px; font-family: inherit; font-weight: 500;
+    cursor: pointer; border: 1px solid var(--line);
+    background: var(--panel); color: var(--ink-2);
+    transition: background .15s, border-color .15s, color .15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .sk-btn:hover { background: var(--line-2); color: var(--ink); border-color: var(--ink-3); }
+  .sk-btn-primary { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .sk-btn-primary:hover { background: #2d3347; border-color: #2d3347; color: #fff; }
+
+  /* Cards area */
+  .sk-cards-wrap { flex: 1; overflow-y: auto; padding: 18px 20px; }
+  .sk-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .sk-card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  .sk-card:hover { border-color: #b0b8c8; box-shadow: 0 3px 14px -5px rgba(0,0,0,.10); }
+  .sk-card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .sk-icon {
+    width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff; letter-spacing: -0.5px;
+    font-family: "Ubuntu", system-ui, sans-serif;
+  }
+  .sk-card-info { flex: 1; min-width: 0; }
+  .sk-card-name {
+    font-size: 13.5px; font-weight: 600; color: var(--ink);
+    margin-bottom: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sk-card-meta { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--ink-3); }
+  .sk-star { color: #f5a623; }
+  .sk-card-gh {
+    width: 28px; height: 28px; border: 1px solid var(--line); border-radius: 7px;
+    display: grid; place-items: center; color: var(--ink-3); flex-shrink: 0;
+    transition: border-color .15s, color .15s;
+  }
+  .sk-card:hover .sk-card-gh { border-color: var(--ink-3); color: var(--ink); }
+  .sk-card-desc {
+    font-size: 12.5px; color: var(--ink-2); line-height: 1.6;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .sk-card-divider { height: 1px; background: var(--line-2); }
+  .sk-card-mid {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11.5px; color: var(--ink-3);
+  }
+  .sk-card-files { display: flex; align-items: center; gap: 4px; }
+  .sk-cat-tag {
+    font-size: 11px; color: var(--ink-3);
+    background: var(--line-2); border-radius: 4px; padding: 2px 7px;
+  }
+  .sk-card-foot {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11.5px; color: var(--ink-3);
+  }
+  .sk-foot-item { display: flex; align-items: center; gap: 3px; }
+  .sk-no-results {
+    grid-column: 1/-1; text-align: center;
+    padding: 60px 20px; color: var(--ink-3); font-size: 13.5px;
+  }
+
+  /* ---- Create Skill Modal ---- */
+  .cs-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.32);
+    z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .cs-overlay.open { display: flex; }
+  .cs-modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 28px 28px;
+    width: 420px;
+    box-shadow: 0 20px 60px -10px rgba(0,0,0,.22);
+    position: relative;
+  }
+  .cs-title {
+    font-size: 15px; font-weight: 700; color: var(--ink);
+    margin-bottom: 20px; text-align: center;
+  }
+  .cs-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 28px; height: 28px; border-radius: 8px;
+    border: none; background: none; cursor: pointer;
+    display: grid; place-items: center;
+    color: var(--ink-3); transition: background .12s, color .12s;
+  }
+  .cs-close:hover { background: var(--line-2); color: var(--ink); }
+  .cs-cards {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  .cs-card {
+    border: 1.5px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 16px 22px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    cursor: pointer;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    text-align: center;
+  }
+  .cs-card:hover {
+    border-color: var(--ink-3);
+    box-shadow: 0 4px 18px -6px rgba(0,0,0,.12);
+    background: var(--bg);
+  }
+  .cs-card-icon {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+  }
+  .cs-card-name {
+    font-size: 14.5px; font-weight: 700; color: var(--ink);
+  }
+  .cs-card-sub {
+    font-size: 12px; color: var(--ink-3); margin-top: -4px;
+  }
+
+  /* ========== Agents Pane ========== */
+  .ag-layout { display: flex; height: 100%; overflow: hidden; }
+  .ag-sidebar {
+    width: 200px; flex-shrink: 0;
+    border-right: 1px solid var(--line);
+    overflow-y: auto; padding: 14px 10px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .ag-sort {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--panel);
+    font-size: 12.5px; color: var(--ink-2);
+    cursor: pointer; margin-bottom: 6px; user-select: none;
+    transition: border-color .15s;
+  }
+  .ag-sort:hover { border-color: var(--ink-3); }
+  .ag-sort-chev { margin-left: auto; opacity: .5; }
+  .ag-cat-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 12px; border-radius: 8px;
+    font-size: 13px; color: var(--ink-2);
+    cursor: pointer; transition: background .15s, color .15s;
+  }
+  .ag-cat-item:hover { background: var(--line-2); color: var(--ink); }
+  .ag-cat-item.active { background: var(--vertical-soft); color: var(--vertical); font-weight: 600; }
+  .ag-cat-icon { flex-shrink: 0; opacity: .65; }
+  .ag-cat-item.active .ag-cat-icon { opacity: 1; }
+  .ag-cat-count { margin-left: auto; font-size: 11.5px; color: var(--ink-3); }
+  .ag-cat-item.active .ag-cat-count { color: var(--vertical); opacity: .75; }
+  .ag-cat-sep { height: 1px; background: var(--line-2); margin: 6px 4px; }
+  .ag-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .ag-topbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px; border-bottom: 1px solid var(--line-2); flex-shrink: 0;
+  }
+  .ag-search {
+    flex: 1; display: flex; align-items: center; gap: 8px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 13px; color: var(--ink-3); font-size: 13px;
+  }
+  .ag-search input {
+    border: none; background: none; outline: none;
+    font-family: inherit; font-size: 13px; color: var(--ink); width: 100%;
+  }
+  .ag-search input::placeholder { color: var(--ink-3); }
+  .ag-kbd {
+    font-size: 11px; color: var(--ink-3);
+    border: 1px solid var(--line); border-radius: 5px;
+    padding: 2px 6px; background: var(--line-2);
+    letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0;
+  }
+  .ag-content { flex: 1; overflow-y: auto; padding: 20px 22px; }
+  .ag-section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .ag-section-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .ag-see-all { font-size: 12.5px; color: var(--ink-3); cursor: pointer; transition: color .12s; }
+  .ag-see-all:hover { color: var(--vertical); }
+  .ag-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  .ag-card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    cursor: pointer; transition: border-color .15s, box-shadow .15s;
+  }
+  .ag-card:hover { border-color: #b0b8c8; box-shadow: 0 3px 14px -5px rgba(0,0,0,.10); }
+  .ag-card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .ag-avatar {
+    width: 46px; height: 46px; border-radius: 11px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 26px; line-height: 1;
+  }
+  .ag-card-info { flex: 1; min-width: 0; padding-top: 2px; }
+  .ag-card-name {
+    font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ag-card-author { font-size: 11.5px; color: var(--ink-3); }
+  .ag-card-desc {
+    font-size: 12.5px; color: var(--ink-2); line-height: 1.65;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .ag-stats { display: flex; align-items: center; gap: 14px; font-size: 11.5px; color: var(--ink-3); }
+  .ag-stat { display: flex; align-items: center; gap: 3px; }
+  .ag-card-divider { height: 1px; background: var(--line-2); }
+  .ag-card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11.5px; color: var(--ink-3);
+  }
+  .ag-foot-date { display: flex; align-items: center; gap: 4px; }
+  .ag-foot-cat {
+    font-size: 11px; color: var(--ink-3);
+    background: var(--line-2); border-radius: 4px; padding: 2px 7px;
+  }
+  .ag-no-results {
+    grid-column: 1/-1; text-align: center;
+    padding: 60px 20px; color: var(--ink-3); font-size: 13.5px;
+  }
+</style>
+<style data-id="immersive-translate-input-injected-css"></style></head>
+<body style="">
+
+<!-- ===== Shared Top Nav ===== -->
+<div class="shell" id="shared-nav-wrap">
+  <header class="topnav">
+    <div class="nav-brand">
+      <div class="nav-mark">
+        <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true">
+          <!-- signal bars: short-tall-tall-tall-short -->
+          <g fill="currentColor">
+            <rect x="4"  y="14" width="2.4" height="6"  rx="0.6"></rect>
+            <rect x="9"  y="9"  width="2.4" height="14" rx="0.6"></rect>
+            <rect x="14" y="6"  width="2.4" height="20" rx="0.6"></rect>
+            <rect x="19" y="9"  width="2.4" height="14" rx="0.6"></rect>
+            <rect x="24" y="14" width="2.4" height="6"  rx="0.6"></rect>
+          </g>
+          <!-- data dots above bars -->
+          <g fill="currentColor" opacity="0.55">
+            <circle cx="5.2"  cy="11" r="0.9"></circle>
+            <circle cx="10.2" cy="6"  r="0.9"></circle>
+            <circle cx="15.2" cy="3"  r="0.9"></circle>
+            <circle cx="20.2" cy="6"  r="0.9"></circle>
+            <circle cx="25.2" cy="11" r="0.9"></circle>
+          </g>
+        </svg>
+      </div>
+      <div class="nav-brand-text">IPMaster Mythos</div>
+    </div>
+    <nav class="nav-links">
+      <a href="#" class="active">首页</a>
+      <a href="#">智能作业</a>
+    </nav>
+    <div class="nav-extra">
+      <button class="nav-link-btn" id="skillsNavBtn" onclick="openSkillsModal()">SKILLS</button>
+      <div class="my-proj-wrap" id="myProjWrap">
+        <button class="nav-link-btn" onclick="toggleMyProjects(event)">我的项目 <svg style="vertical-align:-1px" viewBox="0 0 10 6" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg></button>
+        <div class="my-proj-dropdown" id="myProjDropdown">
+          <div style="padding:8px 0 4px">
+            <div class="my-proj-folder">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5 h4.5 l1.5 1.5 H14 a1 1 0 0 1 1 1 v5 a1 1 0 0 1-1 1 H2 a1 1 0 0 1-1-1 v-7 a1 1 0 0 1 1-1 z"></path></svg>
+              IPRAN 场景智能体
+            </div>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#2c4a7a"></span>骨干网容量评估</a>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#2c4a7a"></span>接入环二期扩容评估</a>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#2c4a7a"></span>VXLAN Spine-Leaf 设计</a>
+          </div>
+          <div class="my-proj-sep"></div>
+          <div style="padding:4px 0">
+            <div class="my-proj-folder">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5 h4.5 l1.5 1.5 H14 a1 1 0 0 1 1 1 v5 a1 1 0 0 1-1 1 H2 a1 1 0 0 1-1-1 v-7 a1 1 0 0 1 1-1 z"></path></svg>
+              IPCORE 场景智能体
+            </div>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#1f6b5e"></span>核心骨干网重构项目</a>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#1f6b5e"></span>全网 IS-IS 迁移</a>
+          </div>
+          <div class="my-proj-sep"></div>
+          <div style="padding:4px 0">
+            <div class="my-proj-folder">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5 h4.5 l1.5 1.5 H14 a1 1 0 0 1 1 1 v5 a1 1 0 0 1-1 1 H2 a1 1 0 0 1-1-1 v-7 a1 1 0 0 1 1-1 z"></path></svg>
+              数据中心场景智能体
+            </div>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#7b4fa6"></span>东区 DC 网络改造</a>
+            <a class="my-proj-item" href="#"><span class="my-proj-dot" style="background:#7b4fa6"></span>南区数据中心扩容</a>
+          </div>
+          <div style="height:6px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-tools">
+      <button class="nav-btn nav-btn--icon" type="button" title="帮助">
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.4"></circle>
+          <path d="M6.2 6.3 a1.8 1.8 0 0 1 3.5 0.5 c0 1-1.7 1.4-1.7 2.5"></path>
+          <circle cx="8" cy="11.6" r="0.4" fill="currentColor" stroke="none"></circle>
+        </svg>
+      </button>
+      <button class="nav-btn nav-btn--icon" type="button" title="反馈">
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.5 3.2 h11 a1 1 0 0 1 1 1 v6.4 a1 1 0 0 1-1 1 H8.7 L6.2 13.7 v-2.1 H2.5 a1 1 0 0 1-1-1 V4.2 a1 1 0 0 1 1-1 z"></path>
+          <line x1="4.5" y1="6.4" x2="11.5" y2="6.4"></line>
+          <line x1="4.5" y1="8.7" x2="9.5" y2="8.7"></line>
+        </svg>
+      </button>
+      <div class="nav-avatar-wrap" id="avatarWrap">
+        <div class="nav-avatar" id="avatarBtn">
+          ZL
+          <svg viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-left:4px;opacity:.7">
+            <polyline points="1,1 5,5 9,1"></polyline>
+          </svg>
+        </div>
+        <div class="nav-dropdown" id="avatarDropdown">
+          <a href="#" class="nav-dropdown-item">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M2.5 13.5 a5.5 5.5 0 0 1 11 0"></path></svg>
+            个人中心
+          </a>
+          <div class="nav-dropdown-item nav-dropdown-item--lang" id="langItem">
+            <span style="display:flex;align-items:center;gap:9px;flex:1">
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"></circle><path d="M8 2 C6 5 6 11 8 14 M8 2 C10 5 10 11 8 14"></path><line x1="2.5" y1="6" x2="13.5" y2="6"></line><line x1="2.5" y1="10" x2="13.5" y2="10"></line></svg>
+              语言切换
+            </span>
+            <svg viewBox="0 0 6 10" width="6" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.45"><polyline points="1,1 5,5 1,9"></polyline></svg>
+            <div class="nav-submenu" id="langSubmenu">
+              <a href="#" class="nav-dropdown-item nav-submenu-item lang-active">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" stroke="none"><path d="M6.5 11.5 L3 8 L4.4 6.6 L6.5 8.7 L11.6 3.6 L13 5 Z"></path></svg>
+                中文
+              </a>
+              <a href="#" class="nav-dropdown-item nav-submenu-item">
+                <span style="width:13px;display:inline-block"></span>
+                English
+              </a>
+            </div>
+          </div>
+          <div class="nav-dropdown-sep"></div>
+          <a href="#" class="nav-dropdown-item nav-dropdown-item--muted">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3"></path><polyline points="10,11 13,8 10,5"></polyline><line x1="5" y1="8" x2="13" y2="8"></line></svg>
+            退出登录
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="shell page active" id="page-home" data-screen-label="01 Home">
+
+  <!-- ===== Vertical scenario agents ===== -->
+  <section class="section vertical-section" style="margin-top:0">
+    <div class="section-head">
+      <div class="title">
+        <h2>垂直场景智能体</h2>
+      </div>
+    </div>
+
+    <div class="vertical-grid">
+      <!-- 1. IPRAN -->
+      <div class="v-card">
+        <a class="name agent-link" href="https://netlive.gts.huawei.com/ipcrystal-union/ipchangespiritui/#/IPChangeSpirit/agentManager?projectId=7420793536187527452" target="_blank">IPRAN 场景智能体</a>
+        <div class="title-accent"></div>
+        <div class="projects-label">智能体实例</div>
+        <div class="project-list">
+          <a class="project-chip" href="#"><span class="p-dot live"></span><span>基线智能体</span></a>
+        </div>
+        <div class="v-foot"><span>1 个智能体</span><span>累积调用 · 412</span></div>
+      </div>
+
+      <!-- 2. IPCORE -->
+      <div class="v-card">
+        <a class="name agent-link" href="https://netlive.gts.huawei.com/ipcrystal-union/ipchangespiritui/#/IPChangeSpirit/agentManager?projectId=7420793536187527452" target="_blank">IPCORE 场景智能体</a>
+        <div class="title-accent"></div>
+        <div class="projects-label">智能体实例</div>
+        <div class="project-list">
+          <a class="project-chip" href="#"><span class="p-dot live"></span><span>基线智能体</span></a>
+        </div>
+        <div class="v-foot"><span>1 个智能体</span><span>累积调用 · 326</span></div>
+      </div>
+
+      <!-- 3. DC -->
+      <div class="v-card">
+        <a class="name agent-link" href="https://netlive.gts.huawei.com/ipcrystal-union/ipchangespiritui/#/IPChangeSpirit/agentManager?projectId=7420793536187527452" target="_blank">数据中心场景智能体</a>
+        <div class="title-accent"></div>
+        <div class="projects-label">智能体实例</div>
+        <div class="project-list">
+          <a class="project-chip" href="#"><span class="p-dot live"></span><span>基线智能体</span></a>
+        </div>
+        <div class="v-foot"><span>1 个智能体</span><span>累积调用 · 198</span></div>
+      </div>
+
+      <!-- 4. 网络演讲 -->
+      <div class="v-card">
+        <a class="name agent-link" href="https://netlive.gts.huawei.com/ipcrystal-union/ipchangespiritui/#/IPChangeSpirit/agentManager?projectId=7420793536187527452" target="_blank">网络演讲智能体</a>
+        <div class="title-accent"></div>
+        <div class="projects-label">智能体实例</div>
+        <div class="project-list">
+          <a class="project-chip" href="#"><span class="p-dot live"></span><span>基线智能体</span></a>
+        </div>
+        <div class="v-foot"><span>1 个智能体</span><span>累积调用 · 156</span></div>
+      </div>
+
+      <!-- 5. 更多 -->
+      <div class="v-card">
+        <a class="name agent-link" href="https://netlive.gts.huawei.com/ipcrystal-union/ipchangespiritui/#/IPChangeSpirit/agentManager?projectId=7420793536187527452" target="_blank">更多场景智能体</a>
+        <div class="title-accent"></div>
+        <div class="projects-label">智能体实例</div>
+        <div class="project-list">
+          <a class="project-chip" href="#agents"><span class="v-more-link">浏览全部 →</span></a>
+        </div>
+        <div class="v-foot"><span>共 8 个智能体</span><span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Horizontal capability agents ===== -->
+  <section class="section horizontal-section" style="margin-top:28px">
+    <div class="section-head">
+      <div class="title">
+        <h2>水平能力智能体</h2>
+      </div>
+    </div>
+
+    <div class="horizontal-pipeline">
+      <div class="h-grid">
+        <!-- 1 评估规划 -->
+        <div class="h-card">
+          <a class="name agent-link" href="#" onclick="return false;">评估规划智能体</a>
+        <div class="title-accent"></div>
+          <div class="skills-label">技能实例</div>
+          <div class="skills">
+            <div class="skill"><span class="label"><span class="s-status"></span>系统评估</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>需求分析</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>站点勘测</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>目标网规划</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>投标方案</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>BoQ 设计与检查</span></div>
+          </div>
+          <div class="h-foot"><span>6 技能</span><span>累积调用 · 412</span></div>
+        </div>
+
+        <!-- 2 网络分析 -->
+        <div class="h-card">
+          <a class="name agent-link" href="#" onclick="return false;">网络分析智能体</a>
+        <div class="title-accent"></div>
+          <div class="skills-label">技能实例</div>
+          <div class="skills">
+            <div class="skill featured"><span class="label"><span class="s-status"></span>解析还原（华为）</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>解析还原（多厂商）</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>物理分析</span></div>
+            <div class="skill featured"><span class="label"><span class="s-status"></span>路由分析</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>业务分析</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>保护分析</span></div>
+          </div>
+          <div class="h-foot"><span>6 技能</span><span>累积调用 · 880</span></div>
+        </div>
+
+        <!-- 3 方案设计 -->
+        <div class="h-card">
+          <a class="name agent-link" href="#" onclick="return false;">方案设计智能体</a>
+        <div class="title-accent"></div>
+          <div class="skills-label">技能实例</div>
+          <div class="skills">
+            <div class="skill"><span class="label"><span class="s-status"></span>需求分析</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>BoQ 解析</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>基线 HLD</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>基线 LLD</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>项目化 HLD 生成</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>项目化 LLD 生成</span></div>
+            <div class="skill plan" title="未上线"><span class="label"><span class="s-status"></span>DTRB / DRB 风险</span></div>
+          </div>
+          <div class="h-foot"><span>7 技能</span><span>累积调用 · 326</span></div>
+        </div>
+
+        <!-- 4 MOP -->
+        <div class="h-card">
+          <a class="name agent-link" href="#" onclick="return false;">MOP 生成智能体</a>
+        <div class="title-accent"></div>
+          <div class="skills-label">技能实例</div>
+          <div class="skills">
+            <div class="skill featured"><span class="label"><span class="s-status"></span>DD 解析</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>拓扑生成</span></div>
+            <div class="skill featured"><span class="label"><span class="s-status"></span>脚本生成</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>端口规划</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>面板视图</span></div>
+            <div class="skill featured"><span class="label"><span class="s-status"></span>MOP 生成</span></div>
+          </div>
+          <div class="h-foot"><span>6 技能</span><span>累积调用 · 540</span></div>
+        </div>
+
+        <!-- 5 配置验证 -->
+        <div class="h-card">
+          <a class="name agent-link" href="#" onclick="return false;">配置验证智能体</a>
+        <div class="title-accent"></div>
+          <div class="skills-label">技能实例</div>
+          <div class="skills">
+            <div class="skill"><span class="label"><span class="s-status"></span>语法核查</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>语义核查</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>MOP 自验证</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>自适应仿真</span></div>
+            <div class="skill plan" title="未上线"><span class="label"><span class="s-status"></span>异常根因建议</span></div>
+          </div>
+          <div class="h-foot"><span>5 技能</span><span>累积调用 · 268</span></div>
+        </div>
+
+        <!-- 6 业务比对 -->
+        <div class="h-card">
+          <a class="name agent-link" href="#" onclick="return false;">业务比对智能体</a>
+        <div class="title-accent"></div>
+          <div class="skills-label">技能实例</div>
+          <div class="skills">
+            <div class="skill"><span class="label"><span class="s-status"></span>自动化下发</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>特性级业务比对</span></div>
+            <div class="skill"><span class="label"><span class="s-status"></span>端口级业务比对</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>集成验收工程</span></div>
+            <div class="skill dev" title="未上线"><span class="label"><span class="s-status"></span>验收报告生成</span></div>
+            <div class="skill plan" title="未上线"><span class="label"><span class="s-status"></span>下发比对报告</span></div>
+          </div>
+          <div class="h-foot"><span>6 技能</span><span>累积调用 · 198</span></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="footer-left">
+      <span class="footer-brand">IPMaster Mythos</span>
+      <span class="footer-sep">·</span>
+      <span>IPMaster <b>V200R011</b> Release1</span>
+    </div>
+    <div class="footer-mid">NIS IP集成与部署</div>
+    <div class="footer-right">
+      <span>© 2026 IP</span>
+      <span class="footer-sep">·</span>
+      <span>最后同步 2026-05-13 09:42</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ========== Project Agent Page ========== -->
+<div class="shell page" id="page-project" data-screen-label="02 Project Agent">
+
+  <!-- reuse same topnav structure but as a component reference; nav is outside pages -->
+
+  <div class="project-layout">
+
+    <!-- Sidebar -->
+    <aside class="proj-sidebar">
+
+      <!-- 1. 基线智能体 -->
+      <button class="sb-sec-hd" onclick="sbToggle('sbBaselineBody', this)">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2"></circle><circle cx="3" cy="4" r="1.5"></circle><circle cx="13" cy="4" r="1.5"></circle><circle cx="3" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="4.1" y1="4.8" x2="6.3" y2="6.6"></line><line x1="11.9" y1="4.8" x2="9.7" y2="6.6"></line><line x1="4.1" y1="11.2" x2="6.3" y2="9.4"></line><line x1="11.9" y1="11.2" x2="9.7" y2="9.4"></line></svg>
+        基线智能体
+        <svg class="hist-chevron rotated" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+      </button>
+      <div class="sb-sec-body collapsed" id="sbBaselineBody">
+        <div class="sb-agent-item" onclick="sbClickHAgent('评估规划智能体')"><span class="sb-baseline-dot"></span>评估规划智能体</div>
+        <div class="sb-agent-item" onclick="sbClickHAgent('网络分析智能体')"><span class="sb-baseline-dot"></span>网络分析智能体</div>
+        <div class="sb-agent-item" onclick="sbClickHAgent('方案设计智能体')"><span class="sb-baseline-dot"></span>方案设计智能体</div>
+        <div class="sb-agent-item" onclick="sbClickHAgent('MOP 生成智能体')"><span class="sb-baseline-dot"></span>MOP 生成智能体</div>
+        <div class="sb-agent-item" onclick="sbClickHAgent('配置验证智能体')"><span class="sb-baseline-dot"></span>配置验证智能体</div>
+        <div class="sb-agent-item" onclick="sbClickHAgent('业务比对智能体')"><span class="sb-baseline-dot"></span>业务比对智能体</div>
+      </div>
+
+      <div class="proj-tab-divider"></div>
+
+      <!-- 2. 个人智能体 -->
+      <button class="sb-sec-hd" onclick="sbToggle('sbProjectBody', this)">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="2.5"></circle><path d="M2.5 13 a5.5 5.5 0 0 1 11 0"></path></svg>
+        个人智能体
+        <svg class="hist-chevron rotated" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+      </button>
+      <div class="sb-sec-body collapsed" id="sbProjectBody">
+        <div class="sb-create-btn" onclick="openAgentsModal()">
+          <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>
+          创建智能体
+        </div>
+        <div id="sbAgentList"></div>
+      </div>
+
+      <div class="proj-tab-divider"></div>
+
+      <!-- 3. 历史记录 -->
+      <button class="sb-sec-hd" id="histBtn" onclick="sbToggle('sessionList', this)">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"></circle><polyline points="8,4.5 8,8 10.5,9.5"></polyline></svg>
+        历史记录
+        <svg class="hist-chevron rotated" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+      </button>
+      <div class="session-list collapsed" id="sessionList"></div>
+
+    </aside>
+
+    <!-- Main -->
+    <main class="proj-main" style="position:relative">
+
+      <!-- Chat pane -->
+      <div class="tab-pane active" id="pane-chat">
+        <div class="chat-header">
+          <div class="chat-header-title">
+            <span class="ch-dot"></span>
+            <span id="chatAgentTitle">个人智能体工作台</span>
+          </div>
+        </div>
+
+        <!-- Messages area -->
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-welcome" id="chatWelcome">
+            <div class="chat-welcome-icon">
+              <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6 h24 a2 2 0 0 1 2 2 v12 a2 2 0 0 1-2 2 H18 L13 28 v-6 H4 a2 2 0 0 1-2-2 V8 a2 2 0 0 1 2-2 z"></path></svg>
+            </div>
+            <h3 id="chatWelcomeTitle">个人智能体</h3>
+            <p>通过加载技能，让智能体协助你完成网络设计、脚本生成、配置验证等专项任务</p>
+            <div class="chat-suggestions">
+              <span class="chat-suggestion" onclick="sendSuggestion(this)">分析当前网络拓扑</span>
+              <span class="chat-suggestion" onclick="sendSuggestion(this)">生成 MOP 操作步骤</span>
+              <span class="chat-suggestion" onclick="sendSuggestion(this)">路由策略检查</span>
+              <span class="chat-suggestion" onclick="sendSuggestion(this)">端口规划建议</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-wrap" style="position:relative">
+          <input type="file" id="attachInput" style="display:none" multiple>
+          <div class="skill-picker" id="skillPicker">
+            <div class="sp-header">
+              <span class="sp-header-label">已加载技能</span>
+              <span class="sp-header-count" id="spHeaderCount">0</span>
+            </div>
+            <div class="sp-list" id="spSkillList"></div>
+            <div class="sp-actions">
+              <div class="skill-picker-item" onclick="switchToSkillsTab()">
+                <span class="sp-action-icon">
+                  <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>
+                </span>
+                添加技能
+              </div>
+              <div class="skill-picker-item" onclick="switchToSkillsTab()">
+                <span class="sp-action-icon">
+                  <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="5" width="14" height="9" rx="1.5"></rect><path d="M5 5 V3.5 a3 3 0 0 1 6 0 V5"></path></svg>
+                </span>
+                管理技能
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-box" id="chatInputBox">
+            <div class="chat-input-skills" id="activeSkills" style="display:none"></div>
+            <div class="chat-textarea-row">
+              <textarea class="chat-textarea" id="chatInput" rows="1" placeholder="向智能体发消息…" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+            </div>
+            <div class="chat-input-row">
+              <button class="chat-new-btn" title="新增对话" onclick="newSession()">
+                <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.5 h9 a1 1 0 0 1 1 1 v5 a1 1 0 0 1-1 1 H7 L5 12.5 v-2 H2 a1 1 0 0 1-1-1 v-5 a1 1 0 0 1 1-1 z"></path><line x1="12" y1="5" x2="15" y2="2"></line><line x1="13" y1="2" x2="15" y2="2" ></line><line x1="15" y1="2" x2="15" y2="4"></line></svg>
+                会话
+              </button>
+              <button class="chat-attach-btn" title="上传附件" onclick="document.getElementById('attachInput').click()">
+                <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5 L6.5 13 a3.5 3.5 0 0 1-5-5 L8 1.5 a2.3 2.3 0 0 1 3.2 3.2 L5 11 a1.1 1.1 0 0 1-1.6-1.6 L9 4"></path></svg>
+                附件
+              </button>
+              <button class="chat-skill-btn" id="skillBtn" title="加载技能" onclick="toggleSkillPicker(event)">
+                <svg viewBox="0 0 28 20" width="16" height="12" fill="currentColor"><rect x="0" y="8" width="3" height="8" rx="1"></rect><rect x="5" y="4" width="3" height="12" rx="1"></rect><rect x="10" y="0" width="3" height="20" rx="1"></rect><rect x="15" y="4" width="3" height="12" rx="1"></rect><rect x="20" y="8" width="3" height="8" rx="1"></rect></svg>
+                技能
+                <span class="chat-skill-badge" id="skillBadge"></span>
+              </button>
+              <div class="chat-input-spacer"></div>
+              <button class="chat-send" id="sendBtn" onclick="sendMessage()">
+                <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="13" x2="8" y2="3"></line><polyline points="4,7 8,3 12,7"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills pane -->
+    </main>
+  </div>
+  <footer class="site-footer" style="margin-top:12px">
+    <div class="footer-left">
+      <span class="footer-brand">IPMaster Mythos</span>
+      <span class="footer-sep">·</span>
+      <span>IPMaster <b>V200R011</b> Release1</span>
+    </div>
+    <div class="footer-mid">NIS IP集成与部署</div>
+    <div class="footer-right">
+      <span>© 2026 IP</span>
+      <span class="footer-sep">·</span>
+      <span>最后同步 2026-05-13 09:42</span>
+    </div>
+  </footer>
+</div>
+
+<!-- Create Skill Overlay -->
+<div class="cs-overlay" id="csOverlay" onclick="closeCreateSkill(event)">
+  <div class="cs-modal">
+    <button class="cs-close" onclick="document.getElementById('csOverlay').classList.remove('open')">
+      <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="1" y1="1" x2="13" y2="13"></line><line x1="13" y1="1" x2="1" y2="13"></line></svg>
+    </button>
+    <div class="cs-title">新建 Skill</div>
+    <div class="cs-cards">
+      <div class="cs-card" onclick="alert('空白技能 — 即将上线')">
+        <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="24" height="24" rx="4"></rect><line x1="16" y1="10" x2="16" y2="22"></line><line x1="10" y1="16" x2="22" y2="16"></line></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--ink)">空白创建</span>
+        <span style="font-size:11.5px;color:var(--ink-3)">从头定义技能逻辑</span>
+      </div>
+      <div class="cs-card" onclick="alert('模板技能 — 即将上线')">
+        <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4 h20 a2 2 0 0 1 2 2 v20 a2 2 0 0 1-2 2 H6 a2 2 0 0 1-2-2 V6 a2 2 0 0 1 2-2 z"></path><line x1="10" y1="11" x2="22" y2="11"></line><line x1="10" y1="16" x2="22" y2="16"></line><line x1="10" y1="21" x2="16" y2="21"></line></svg>
+        <span style="font-size:13px;font-weight:600;color:var(--ink)">使用模板</span>
+        <span style="font-size:11.5px;color:var(--ink-3)">基于现有模板快速创建</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Agents Modal -->
+<div id="agentsModal" class="agents-modal">
+  <div class="agents-modal-backdrop" onclick="closeAgentsModal()"></div>
+  <div class="agents-modal-panel">
+    <div class="agents-modal-hd">
+      <span class="agents-modal-title">个人智能体市场</span>
+      <button class="skills-modal-close" onclick="closeAgentsModal()">×</button>
+    </div>
+    <div class="agents-modal-body">
+      <div class="ag-layout">
+        <div class="ag-sidebar">
+          <div class="ag-cat-item active" data-agcat2="all"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="2" width="5" height="5" rx="1"></rect><rect x="9" y="2" width="5" height="5" rx="1"></rect><rect x="2" y="9" width="5" height="5" rx="1"></rect><rect x="9" y="9" width="5" height="5" rx="1"></rect></svg>全部<span class="ag-cat-count">12k</span></div>
+          <div class="ag-cat-sep"></div>
+          <div class="ag-cat-item" data-agcat2="网络规划"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,12 6,7 9,10 13,5"></polyline><polyline points="10,5 13,5 13,8"></polyline></svg>网络规划<span class="ag-cat-count">3.2k</span></div>
+          <div class="ag-cat-item" data-agcat2="配置运维"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.5"></circle><path d="M8 1.5 v1.8 M8 12.7 v1.8 M1.5 8 h1.8 M12.7 8 h1.8 M3.6 3.6 l1.3 1.3 M11.1 11.1 l1.3 1.3 M11.1 4.9 l-1.3 1.3 M4.9 11.1 l-1.3 1.3"></path></svg>配置运维<span class="ag-cat-count">4.1k</span></div>
+          <div class="ag-cat-item" data-agcat2="故障排查"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"></circle><line x1="10.5" y1="10.5" x2="14" y2="14"></line></svg>故障排查<span class="ag-cat-count">2.8k</span></div>
+          <div class="ag-cat-item" data-agcat2="安全审计"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2 L13 4 V8 C13 11.5 10.5 13.8 8 14.5 C5.5 13.8 3 11.5 3 8 V4 Z"></path></svg>安全审计<span class="ag-cat-count">1.4k</span></div>
+          <div class="ag-cat-item" data-agcat2="文档生成"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 H4 a1 1 0 0 0-1 1 v10 a1 1 0 0 0 1 1 h8 a1 1 0 0 0 1-1 V5 z"></path><polyline points="10,2 10,5 13,5"></polyline><line x1="5" y1="8" x2="11" y2="8"></line><line x1="5" y1="11" x2="9" y2="11"></line></svg>文档生成<span class="ag-cat-count">1.6k</span></div>
+          <div class="ag-cat-sep"></div>
+          <div class="ag-cat-item" onclick="alert('新增分类 — 即将上线')" style="color:var(--ink-3)"><svg class="ag-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"></line><line x1="3" y1="8" x2="13" y2="8"></line></svg>新增分类</div>
+        </div>
+        <div class="ag-main">
+          <div class="ag-topbar">
+            <div class="ag-search"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"></circle><line x1="10.5" y1="10.5" x2="14" y2="14"></line></svg><input id="agSearch2" type="text" placeholder="搜索名称介绍或关键词…"></div>
+            <button class="sk-btn" onclick="alert('新建智能体 — 即将上线')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>新建智能体</button>
+          </div>
+          <div class="ag-content"><div class="ag-grid" id="agGrid2"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Skills Modal -->
+<div id="skillsModal" class="skills-modal">
+  <div class="skills-modal-backdrop" onclick="closeSkillsModal()"></div>
+  <div class="skills-modal-panel">
+    <div class="skills-modal-hd">
+      <span class="skills-modal-title">Skills 市场</span>
+      <button class="skills-modal-close" onclick="closeSkillsModal()">×</button>
+    </div>
+    <div class="skills-modal-body">
+      <div class="sk-layout">
+        <div class="sk-sidebar">
+          <div class="sk-type-tabs">
+            <button class="sk-type-btn active" data-sktype="baseline">基线</button>
+            <button class="sk-type-btn" data-sktype="project">项目</button>
+          </div>
+          <div class="sk-cat-sep"></div>
+          <div class="sk-cat-item active" data-skcat="all"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="2" y="2" width="5" height="5" rx="1"></rect><rect x="9" y="2" width="5" height="5" rx="1"></rect><rect x="2" y="9" width="5" height="5" rx="1"></rect><rect x="9" y="9" width="5" height="5" rx="1"></rect></svg>全部</div>
+          <div class="sk-cat-sep"></div>
+          <div class="sk-cat-item" data-skcat="评估规划"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,12 6,7 9,10 13,5"></polyline><polyline points="10,5 13,5 13,8"></polyline></svg>评估规划</div>
+          <div class="sk-cat-item" data-skcat="网络分析"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="2"></circle><circle cx="3" cy="4" r="1.5"></circle><circle cx="13" cy="4" r="1.5"></circle><circle cx="3" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="4.1" y1="4.8" x2="6.3" y2="6.6"></line><line x1="11.9" y1="4.8" x2="9.7" y2="6.6"></line><line x1="4.1" y1="11.2" x2="6.3" y2="9.4"></line><line x1="11.9" y1="11.2" x2="9.7" y2="9.4"></line></svg>网络分析</div>
+          <div class="sk-cat-item" data-skcat="方案设计"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="12" height="12" rx="2"></rect><line x1="5" y1="8" x2="11" y2="8"></line><line x1="5" y1="5.5" x2="9" y2="5.5"></line><line x1="5" y1="10.5" x2="8" y2="10.5"></line></svg>方案设计</div>
+          <div class="sk-cat-item" data-skcat="MOP生成"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 H4 a1 1 0 0 0-1 1 v10 a1 1 0 0 0 1 1 h8 a1 1 0 0 0 1-1 V5 z"></path><polyline points="10,2 10,5 13,5"></polyline><line x1="5" y1="8" x2="11" y2="8"></line><line x1="5" y1="11" x2="9" y2="11"></line></svg>MOP 生成</div>
+          <div class="sk-cat-item" data-skcat="配置验证"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,8 6,11 13,5"></polyline></svg>配置验证</div>
+          <div class="sk-cat-item" data-skcat="业务比对"><svg class="sk-cat-icon" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="2" x2="4" y2="14"></line><line x1="12" y1="2" x2="12" y2="14"></line><line x1="4" y1="5" x2="12" y2="5"></line><line x1="4" y1="9" x2="12" y2="9"></line><line x1="4" y1="13" x2="8" y2="13"></line></svg>业务比对</div>
+        </div>
+        <div class="sk-main">
+          <div class="sk-topbar">
+            <div class="sk-search"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7" cy="7" r="4.5"></circle><line x1="10.5" y1="10.5" x2="14" y2="14"></line></svg><input id="skSearch" type="text" placeholder="按名称、描述或关键词搜索…"></div>
+            <button class="sk-btn" onclick="document.getElementById('csOverlay').classList.add('open')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>Create Skill</button>
+            <button class="sk-btn sk-btn-primary" onclick="alert('Submit Skill — 即将上线')"><svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="11" x2="7" y2="3"></line><polyline points="4,6 7,3 10,6"></polyline><line x1="2" y1="11" x2="12" y2="11"></line></svg>Submit Skill</button>
+          </div>
+          <div class="sk-cards-wrap"><div class="sk-grid" id="skGrid"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- agGrid container (hidden) -->
+<div id="agGrid" style="display:none"></div>
+
+<script>
+  /* ---- Sessions ---- */
+  var sessions = [
+    { id: 3,  name: '骨干网容量评估',       agent: 'IP 地址规划师', skills: ['目标网规划','基线 HLD','基线 LLD'] },
+    { id: 8,  name: 'VXLAN Spine-Leaf 设计', agent: 'IP 地址规划师', skills: ['目标网规划','基线 HLD'] },
+    { id: 12, name: '接入环二期扩容评估',    agent: 'IP 地址规划师', skills: ['目标网规划','基线 HLD','基线 LLD'] }
+  ];
+  var activeSessionId = null;
+
+  function renderSessions() {
+    var list = document.getElementById('sessionList');
+    if (!list) return;
+    var icon = '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 2.5 h11 a.5.5 0 0 1 .5.5 v6 a.5.5 0 0 1-.5.5 H8 L6 11.5 v-2 H1.5 a.5.5 0 0 1-.5-.5 V3 a.5.5 0 0 1 .5-.5 z"></path></svg>';
+    list.innerHTML = sessions.map(function (s) {
+      return '<div class="session-item' + (s.id === activeSessionId ? ' active' : '') + '" onclick="loadSession(' + s.id + ')" title="' + s.name + '">' +
+        icon + '<span class="session-item-name">' + s.name + '</span></div>';
+    }).join('');
+  }
+
+  function loadSession(id) {
+    var s = null;
+    for (var i = 0; i < sessions.length; i++) { if (sessions[i].id === id) { s = sessions[i]; break; } }
+    if (!s) return;
+    activeSessionId = id;
+    renderSessions();
+    var titleEl = document.getElementById('chatAgentTitle');
+    if (titleEl) titleEl.textContent = s.agent || s.name;
+    var msgs = document.getElementById('chatMessages');
+    if (msgs) {
+      msgs.querySelectorAll('.msg').forEach(function (el) { el.remove(); });
+      var welcome = document.getElementById('chatWelcome');
+      if (welcome) { var h3 = welcome.querySelector('h3'); if (h3) h3.textContent = s.agent || s.name; welcome.style.display = ''; }
+    }
+    activeSkills = (s.skills || []).slice();
+    renderActiveSkills();
+  }
+
+  function newSession() {
+    activeSessionId = null;
+    var titleEl = document.getElementById('chatAgentTitle');
+    if (titleEl) titleEl.textContent = '个人智能体工作台';
+    var msgs = document.getElementById('chatMessages');
+    if (msgs) {
+      msgs.querySelectorAll('.msg').forEach(function (el) { el.remove(); });
+      var welcome = document.getElementById('chatWelcome');
+      if (welcome) { var h3 = welcome.querySelector('h3'); if (h3) h3.textContent = '个人智能体'; welcome.style.display = ''; }
+    }
+    activeSkills = [];
+    renderActiveSkills();
+    renderSessions();
+  }
+
+  renderSessions();
+
+  /* ---- Create Skill Modal ---- */
+  function closeCreateSkill(e) {
+    if (e.target === document.getElementById('csOverlay')) document.getElementById('csOverlay').classList.remove('open');
+  }
+
+  /* ---- Avatar dropdown ---- */
+  (function () {
+    var btn = document.getElementById('avatarBtn');
+    var drop = document.getElementById('avatarDropdown');
+    if (!btn || !drop) return;
+    btn.addEventListener('click', function (e) { e.stopPropagation(); drop.classList.toggle('open'); });
+    document.addEventListener('click', function () { drop.classList.remove('open'); });
+  })();
+
+  /* ---- Page switching ---- */
+  var pageMap = { '首页': 'page-home', '智能作业': 'page-project' };
+  document.querySelectorAll('.nav-links a').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelectorAll('.nav-links a').forEach(function (x) { x.classList.remove('active'); });
+      a.classList.add('active');
+      var target = pageMap[a.textContent.trim()] || 'page-home';
+      document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+      document.getElementById(target).classList.add('active');
+      window.scrollTo(0, 0);
+    });
+  });
+
+  /* ---- H-card click → 智能作业 + 对应基线智能体 ---- */
+  var hAgents = [];
+  document.querySelectorAll('.horizontal-pipeline .h-card').forEach(function (card) {
+    var name = card.querySelector('.name.agent-link').textContent.trim();
+    var skills = Array.from(card.querySelectorAll('.skill:not(.dev):not(.plan) .label')).map(function (el) { return el.textContent.trim(); });
+    hAgents.push({ name: name, skills: skills });
+    card.addEventListener('click', function () {
+      document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+      document.getElementById('page-project').classList.add('active');
+      window.scrollTo(0, 0);
+      document.querySelectorAll('.nav-links a').forEach(function (a) { a.classList.toggle('active', a.textContent.trim() === '智能作业'); });
+      var body = document.getElementById('sbBaselineBody');
+      if (body && body.classList.contains('collapsed')) {
+        body.classList.remove('collapsed');
+        var hd = body.previousElementSibling;
+        var chev = hd ? hd.querySelector('.hist-chevron') : null;
+        if (chev) chev.classList.remove('rotated');
+      }
+      sbClickHAgent(name);
+    });
+  });
+
+  /* ---- Skills data ---- */
+  var skData = [
+    { name:'解析还原（华为）', abbr:'解析', cat:'网络分析',  type:'baseline', color:'#1f7a58', rating:4.9, usage:2341, desc:'解析华为 VRP 设备配置，自动还原现网拓扑与业务模型' },
+    { name:'基线 HLD',         abbr:'HLD',  cat:'方案设计',  type:'baseline', color:'#6b4baa', rating:4.8, usage:1876, desc:'根据网络需求生成高层次设计文档，覆盖组网架构与关键参数' },
+    { name:'基线 LLD',         abbr:'LLD',  cat:'方案设计',  type:'baseline', color:'#6b4baa', rating:4.7, usage:1543, desc:'在 HLD 基础上生成详细低层次设计，包含设备级配置规划' },
+    { name:'脚本生成',         abbr:'脚本', cat:'MOP生成',   type:'baseline', color:'#b84a30', rating:4.8, usage:2109, desc:'基于 LLD 自动生成可执行设备配置脚本' },
+    { name:'语法核查',         abbr:'语法', cat:'配置验证',  type:'baseline', color:'#167060', rating:4.6, usage:983,  desc:'对配置脚本进行语法正确性检查，识别格式与命令错误' },
+    { name:'特性级业务比对',   abbr:'特比', cat:'业务比对',  type:'baseline', color:'#2c4a7a', rating:4.7, usage:1234, desc:'特性粒度的业务配置对比，快速定位变更差异' },
+    { name:'系统评估',         abbr:'系评', cat:'评估规划',  type:'project',  color:'#3a6abf', rating:4.5, usage:567,  desc:'对现网系统进行全面评估，输出容量与改造建议' },
+    { name:'需求分析',         abbr:'需析', cat:'评估规划',  type:'project',  color:'#3a6abf', rating:4.6, usage:789,  desc:'梳理客户业务需求，输出结构化需求分析报告' },
+    { name:'站点勘测',         abbr:'站勘', cat:'评估规划',  type:'project',  color:'#3a6abf', rating:4.4, usage:432,  desc:'采集站点设备信息，生成勘测报告' },
+    { name:'目标网规划',       abbr:'目规', cat:'评估规划',  type:'project',  color:'#3a6abf', rating:4.7, usage:1023, desc:'基于评估结果规划目标网络架构与演进路径' },
+    { name:'投标方案',         abbr:'投方', cat:'评估规划',  type:'project',  color:'#3a6abf', rating:4.3, usage:0,    desc:'辅助生成投标技术方案文档', status:'dev' },
+    { name:'BoQ 设计与检查',   abbr:'BoQ',  cat:'评估规划',  type:'project',  color:'#3a6abf', rating:4.4, usage:0,    desc:'设计并核查物料清单', status:'dev' },
+    { name:'解析还原（多厂商）',abbr:'多析', cat:'网络分析',  type:'project',  color:'#1f7a58', rating:4.6, usage:876,  desc:'支持华为、思科、瞻博等多厂商配置解析与模型还原' },
+    { name:'物理分析',         abbr:'物析', cat:'网络分析',  type:'project',  color:'#1f7a58', rating:4.5, usage:654,  desc:'分析物理链路连接、端口利用率及光功率等信息' },
+    { name:'路由分析',         abbr:'路由', cat:'网络分析',  type:'project',  color:'#1f7a58', rating:5.0, usage:1567, desc:'深入分析路由表与路由策略，定位路由异常' },
+    { name:'业务分析',         abbr:'业析', cat:'网络分析',  type:'project',  color:'#1f7a58', rating:4.6, usage:890,  desc:'分析各业务流量路径与保护策略' },
+    { name:'保护分析',         abbr:'保析', cat:'网络分析',  type:'project',  color:'#1f7a58', rating:4.4, usage:456,  desc:'检查保护组配置并验证倒换逻辑' },
+    { name:'BoQ 解析',         abbr:'BoQ',  cat:'方案设计',  type:'project',  color:'#6b4baa', rating:4.5, usage:567,  desc:'解析 BoQ 物料清单，提取关键设备信息' },
+    { name:'项目化 HLD 生成',  abbr:'项H',  cat:'方案设计',  type:'project',  color:'#6b4baa', rating:4.3, usage:0,    desc:'针对项目需求生成定制化高层设计文档', status:'dev' },
+    { name:'项目化 LLD 生成',  abbr:'项L',  cat:'方案设计',  type:'project',  color:'#6b4baa', rating:4.3, usage:0,    desc:'针对项目需求生成定制化详细设计文档', status:'dev' },
+    { name:'DD 解析',          abbr:'DD',   cat:'MOP生成',   type:'project',  color:'#b84a30', rating:4.7, usage:987,  desc:'解析设计文档，提取 MOP 生成所需关键参数' },
+    { name:'拓扑生成',         abbr:'拓扑', cat:'MOP生成',   type:'project',  color:'#b84a30', rating:4.5, usage:765,  desc:'根据配置数据自动生成可视化网络拓扑图' },
+    { name:'端口规划',         abbr:'端口', cat:'MOP生成',   type:'project',  color:'#b84a30', rating:4.4, usage:543,  desc:'自动规划设备端口分配，生成端口规划表' },
+    { name:'面板视图',         abbr:'面板', cat:'MOP生成',   type:'project',  color:'#b84a30', rating:4.3, usage:321,  desc:'生成设备面板示意图，辅助现场施工核对' },
+    { name:'MOP 生成',         abbr:'MOP',  cat:'MOP生成',   type:'project',  color:'#b84a30', rating:4.8, usage:1432, desc:'一键生成标准化变更操作规程，含步骤、回退与验证命令' },
+    { name:'语义核查',         abbr:'语义', cat:'配置验证',  type:'project',  color:'#167060', rating:4.5, usage:678,  desc:'基于语义理解核查配置逻辑一致性，识别业务风险' },
+    { name:'MOP 自验证',       abbr:'自验', cat:'配置验证',  type:'project',  color:'#167060', rating:4.2, usage:0,    desc:'自动化执行 MOP 步骤并验证执行结果', status:'dev' },
+    { name:'自适应仿真',       abbr:'仿真', cat:'配置验证',  type:'project',  color:'#167060', rating:4.3, usage:0,    desc:'构建仿真环境验证配置变更影响', status:'dev' },
+    { name:'自动化下发',       abbr:'下发', cat:'业务比对',  type:'project',  color:'#2c4a7a', rating:4.5, usage:432,  desc:'将生成配置自动下发至目标设备，支持灰度与回滚' },
+    { name:'端口级业务比对',   abbr:'端比', cat:'业务比对',  type:'project',  color:'#2c4a7a', rating:4.6, usage:567,  desc:'端口粒度的业务配置比对与差异分析' },
+    { name:'集成验收工程',     abbr:'验收', cat:'业务比对',  type:'project',  color:'#2c4a7a', rating:4.2, usage:0,    desc:'组织集成测试与业务验收流程', status:'dev' },
+    { name:'验收报告生成',     abbr:'验报', cat:'业务比对',  type:'project',  color:'#2c4a7a', rating:4.2, usage:0,    desc:'汇总验收数据自动生成规范验收报告', status:'dev' },
+    { name:'下发比对报告',     abbr:'发报', cat:'业务比对',  type:'project',  color:'#2c4a7a', rating:4.0, usage:0,    desc:'对比下发前后配置差异并生成报告', status:'plan' }
+  ];
+  var skActiveType = 'baseline';
+  var skActiveCat  = 'all';
+
+  function skRender(type, cat, query) {
+    var grid = document.getElementById('skGrid');
+    if (!grid) return;
+    var filtered = skData.filter(function (s) {
+      var typeMatch = s.type === type;
+      var catMatch  = cat === 'all' || s.cat === cat;
+      var q = (query || '').trim().toLowerCase();
+      var qMatch = !q || s.name.toLowerCase().indexOf(q) > -1 || (s.desc || '').toLowerCase().indexOf(q) > -1;
+      return typeMatch && catMatch && qMatch;
+    });
+    if (!filtered.length) { grid.innerHTML = '<div class="sk-no-results">没有找到匹配的 Skill</div>'; return; }
+    grid.innerHTML = filtered.map(function (s) {
+      var statusTag = s.status === 'dev' ? '<span class="sk-status-tag dev">开发中</span>' : s.status === 'plan' ? '<span class="sk-status-tag plan">规划中</span>' : '';
+      return '<div class="sk-card" onclick="addSkill(\'' + s.name.replace(/'/g,"\\'") + '\')">' +
+        '<div class="sk-card-head"><div class="sk-abbr" style="background:' + s.color + '20;color:' + s.color + '">' + s.abbr + '</div>' +
+        '<div class="sk-card-meta"><div class="sk-card-name">' + s.name + statusTag + '</div>' +
+        '<div class="sk-card-cat">' + s.cat + '</div></div></div>' +
+        '<div class="sk-card-desc">' + (s.desc || '') + '</div>' +
+        '<div class="sk-card-foot"><span>★ ' + s.rating.toFixed(1) + '</span><span>' + (s.usage > 0 ? s.usage.toLocaleString() + ' 次' : '—') + '</span></div></div>';
+    }).join('');
+  }
+
+  document.querySelectorAll('.sk-type-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.sk-type-btn').forEach(function (x) { x.classList.remove('active'); });
+      btn.classList.add('active');
+      skActiveType = btn.dataset.sktype;
+      skActiveCat = 'all';
+      document.querySelectorAll('.sk-cat-item').forEach(function (x) { x.classList.remove('active'); });
+      var allItem = document.querySelector('.sk-cat-item[data-skcat="all"]');
+      if (allItem) allItem.classList.add('active');
+      var q = document.getElementById('skSearch');
+      skRender(skActiveType, skActiveCat, q ? q.value : '');
+    });
+  });
+
+  document.querySelectorAll('.sk-cat-item[data-skcat]').forEach(function (item) {
+    item.addEventListener('click', function () {
+      document.querySelectorAll('.sk-cat-item').forEach(function (x) { x.classList.remove('active'); });
+      item.classList.add('active');
+      skActiveCat = item.dataset.skcat || 'all';
+      var q = document.getElementById('skSearch');
+      skRender(skActiveType, skActiveCat, q ? q.value : '');
+    });
+  });
+
+  var skSearchEl = document.getElementById('skSearch');
+  if (skSearchEl) skSearchEl.addEventListener('input', function () { skRender(skActiveType, skActiveCat, skSearchEl.value); });
+
+  skRender('baseline', 'all', '');
+
+  /* ---- Agent data ---- */
+  var agData = [
+    { name:'华为全栈配置助手', author:'IPMaster', emoji:'🤖', bg:'#dde8f5', cat:'配置运维', desc:'深度理解华为 VRP 系统，可解析、生成、核查全系列设备配置，支持交换机、路由器、防火墙全产品线。', links:1203, forks:8,  stars:2841, date:'2026-03-15', skills:['解析还原（华为）','脚本生成','语法核查','语义核查'] },
+    { name:'路由协议专家',     author:'NetCore',  emoji:'🗺️', bg:'#ddf0e8', cat:'网络规划', desc:'精通 BGP、OSPF、IS-IS 协议原理与调优，可诊断路由异常、优化策略、全面评估变更影响范围。', links:876,  forks:5,  stars:1930, date:'2026-02-28', skills:['路由分析','业务分析','保护分析'] },
+    { name:'MOP 生成助手',     author:'AutoOps',  emoji:'📋', bg:'#f5e8e4', cat:'文档生成', desc:'根据 LLD 及设备信息自动生成标准化变更操作规程，内含施工步骤、回退方案与完整验证命令集。', links:542,  forks:3,  stars:1210, date:'2026-04-01', skills:['DD 解析','脚本生成','MOP 生成','拓扑生成','端口规划'] },
+    { name:'故障根因分析',     author:'FaultAI',  emoji:'🔍', bg:'#ede8f5', cat:'故障排查', desc:'基于告警日志与设备状态自动定位故障根因，给出分级处置建议，支持华为、思科多厂商告警格式。', links:698,  forks:6,  stars:1560, date:'2026-03-20', skills:['路由分析','物理分析','业务分析'] },
+    { name:'安全策略审计',     author:'SecureNet',emoji:'🛡️', bg:'#e2f0ec', cat:'安全审计', desc:'扫描 ACL、防火墙策略与路由过滤规则，识别策略冲突、超权访问与合规偏差，输出可交付审计报告。', links:312,  forks:2,  stars:890,  date:'2026-04-10', skills:['语义核查','特性级业务比对','端口级业务比对'] },
+    { name:'IP 地址规划师',    author:'IPMaster', emoji:'🌐', bg:'#dde8f5', cat:'网络规划', desc:'根据业务规模与拓扑需求自动设计 IP 编址方案，支持 IPv4/IPv6 双栈，生成结构化地址分配表。', links:445,  forks:4,  stars:1120, date:'2026-02-14', skills:['目标网规划','基线 HLD','基线 LLD'] },
+    { name:'多厂商配置解析',   author:'ParsePro', emoji:'⚙️', bg:'#f0f0f4', cat:'配置运维', desc:'支持华为、思科、瞻博等主流厂商 CLI 配置解析，统一输出标准化设备模型，便于跨厂商策略比对。', links:891,  forks:7,  stars:2130, date:'2026-03-05', skills:['解析还原（多厂商）','物理分析','路由分析','业务分析'] },
+    { name:'验收报告生成',     author:'DocBot',   emoji:'📄', bg:'#e8edf5', cat:'文档生成', desc:'整合测试数据与比对结果，一键生成格式规范的验收报告，支持自定义客户模板与电子签名流程。', links:234,  forks:1,  stars:567,  date:'2026-04-08', skills:['验收报告生成','集成验收工程','特性级业务比对','端口级业务比对'] },
+    { name:'网络拓扑生成',     author:'TopoAI',   emoji:'🔷', bg:'#fde9e4', cat:'网络规划', desc:'根据配置数据自动生成可视化网络拓扑图，支持物理层、逻辑层与 VPN 业务层多视角展示与导出。', links:567,  forks:4,  stars:1340, date:'2026-03-28', skills:['拓扑生成','端口规划','面板视图'] }
+  ];
+  var agActiveCat = 'all';
+
+  function fmtNum(n) {
+    if (n >= 1000) return (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace('.0','') + 'k';
+    return n.toString();
+  }
+
+  function agRender(cat, query) {
+    var grid = document.getElementById('agGrid');
+    if (!grid) return;
+    var filtered = agData.filter(function (a) {
+      var catMatch = cat === 'all' || a.cat === cat;
+      var q = (query || '').trim().toLowerCase();
+      return catMatch && (!q || a.name.toLowerCase().indexOf(q) > -1 || a.desc.toLowerCase().indexOf(q) > -1);
+    });
+    filtered.sort(function (a, b) { return b.stars - a.stars; });
+    grid.innerHTML = filtered.map(function (a) {
+      return '<div class="ag-card" onclick="openAgent(\'' + a.name.replace(/'/g,"\\'") + '\')">' +
+        '<div class="ag-card-head"><div class="ag-avatar" style="background:' + a.bg + '">' + a.emoji + '</div>' +
+        '<div class="ag-card-info"><div class="ag-card-name">' + a.name + '</div><div class="ag-card-author">' + a.author + '</div></div></div>' +
+        '<div class="ag-card-desc">' + a.desc + '</div>' +
+        '<div class="ag-card-foot"><span>★ ' + fmtNum(a.stars) + '</span><span>⑂ ' + fmtNum(a.forks) + '</span><span>' + a.cat + '</span></div></div>';
+    }).join('');
+  }
+
+  agRender('all', '');
+
+  function openAgent(agentName) {
+    var agent = null;
+    for (var i = 0; i < agData.length; i++) { if (agData[i].name === agentName) { agent = agData[i]; break; } }
+    if (!agent) return;
+    var titleEl = document.getElementById('chatAgentTitle');
+    if (titleEl) titleEl.textContent = agentName;
+    var msgs = document.getElementById('chatMessages');
+    if (msgs) {
+      msgs.querySelectorAll('.msg').forEach(function (el) { el.remove(); });
+      var welcome = document.getElementById('chatWelcome');
+      if (welcome) { var h3 = welcome.querySelector('h3'); if (h3) h3.textContent = agentName; welcome.style.display = ''; }
+    }
+    activeSkills = (agent.skills || []).slice();
+    renderActiveSkills();
+    var newId = Date.now();
+    sessions.unshift({ id: newId, name: agentName, agent: agentName, skills: (agent.skills || []).slice() });
+    activeSessionId = newId;
+    if (sessions.length > 50) sessions = sessions.slice(0, 50);
+    renderSessions();
+    var hist = document.getElementById('sessionList');
+    var hBtn = document.getElementById('histBtn');
+    if (hist && hist.classList.contains('collapsed')) {
+      hist.classList.remove('collapsed');
+      var chev = hBtn ? hBtn.querySelector('.hist-chevron') : null;
+      if (chev) chev.classList.remove('rotated');
+    }
+    document.querySelectorAll('.sb-agent-item').forEach(function (el) { el.classList.remove('active'); });
+    document.querySelectorAll('#sbProjectBody .sb-agent-item').forEach(function (el) {
+      el.classList.toggle('active', el.querySelector('.sb-agent-name') && el.querySelector('.sb-agent-name').textContent === agentName);
+    });
+  }
+
+  /* ---- Sidebar ---- */
+  function sbToggle(bodyId, btn) {
+    var body = document.getElementById(bodyId);
+    if (!body) return;
+    var collapsed = body.classList.toggle('collapsed');
+    var chevron = btn ? btn.querySelector('.hist-chevron') : null;
+    if (chevron) chevron.classList.toggle('rotated', collapsed);
+  }
+
+  function sbRenderAgents() {
+    var list = document.getElementById('sbAgentList');
+    if (!list) return;
+    list.innerHTML = agData.map(function (a) {
+      return '<div class="sb-agent-item" onclick="sbOpenAgent(\'' + a.name.replace(/'/g,"\\'") + '\')" title="' + a.name + '">' +
+        '<span class="sb-baseline-dot"></span>' +
+        '<span class="sb-agent-name">' + a.name + '</span></div>';
+    }).join('');
+  }
+
+  function sbOpenAgent(name) { openAgent(name); }
+
+  function sbClickHAgent(name) {
+    var agent = null;
+    for (var i = 0; i < hAgents.length; i++) { if (hAgents[i].name === name) { agent = hAgents[i]; break; } }
+    var titleEl = document.getElementById('chatAgentTitle');
+    if (titleEl) titleEl.textContent = name;
+    var msgs = document.getElementById('chatMessages');
+    if (msgs) {
+      msgs.querySelectorAll('.msg').forEach(function (el) { el.remove(); });
+      var welcome = document.getElementById('chatWelcome');
+      if (welcome) { var h3 = welcome.querySelector('h3'); if (h3) h3.textContent = name; welcome.style.display = ''; }
+    }
+    activeSkills = agent ? agent.skills.slice() : [];
+    renderActiveSkills();
+    var newId = Date.now();
+    sessions.unshift({ id: newId, name: name, agent: name, skills: activeSkills.slice() });
+    activeSessionId = newId;
+    if (sessions.length > 50) sessions = sessions.slice(0, 50);
+    renderSessions();
+    var hist = document.getElementById('sessionList');
+    var histBtn = document.getElementById('histBtn');
+    if (hist && hist.classList.contains('collapsed')) {
+      hist.classList.remove('collapsed');
+      var chev = histBtn ? histBtn.querySelector('.hist-chevron') : null;
+      if (chev) chev.classList.remove('rotated');
+    }
+    document.querySelectorAll('.sb-agent-item').forEach(function (el) { el.classList.remove('active'); });
+    document.querySelectorAll('#sbBaselineBody .sb-agent-item').forEach(function (el) {
+      el.classList.toggle('active', el.textContent.trim() === name);
+    });
+  }
+
+  function hSelectAgent(idx) {
+    var a = hAgents[idx];
+    if (a) sbClickHAgent(a.name);
+  }
+
+  sbRenderAgents();
+
+  /* ---- Agents modal ---- */
+  var agActiveCat2 = 'all';
+
+  function agRender2(cat, query) {
+    var grid = document.getElementById('agGrid2');
+    if (!grid) return;
+    var filtered = agData.filter(function (a) {
+      var catMatch = cat === 'all' || a.cat === cat;
+      var q = (query || '').trim().toLowerCase();
+      return catMatch && (!q || a.name.toLowerCase().indexOf(q) > -1 || a.desc.toLowerCase().indexOf(q) > -1);
+    });
+    filtered.sort(function (a, b) { return b.stars - a.stars; });
+    grid.innerHTML = filtered.length ? filtered.map(function (a) {
+      return '<div class="ag-card" onclick="openAgentFromModal(\'' + a.name.replace(/'/g,"\\'") + '\')">' +
+        '<div class="ag-card-head"><div class="ag-avatar" style="background:' + a.bg + '">' + a.emoji + '</div>' +
+        '<div class="ag-card-info"><div class="ag-card-name">' + a.name + '</div><div class="ag-card-author">' + a.author + '</div></div></div>' +
+        '<div class="ag-card-desc">' + a.desc + '</div>' +
+        '<div class="ag-card-foot"><span>★ ' + fmtNum(a.stars) + '</span><span>⑂ ' + fmtNum(a.forks) + '</span><span>' + a.cat + '</span></div></div>';
+    }).join('') : '<div class="ag-no-results">没有找到匹配的 Agent</div>';
+  }
+
+  function openAgentsModal() {
+    document.getElementById('agentsModal').classList.add('open');
+    agRender2(agActiveCat2, '');
+  }
+  function closeAgentsModal() { document.getElementById('agentsModal').classList.remove('open'); }
+  function openAgentFromModal(name) { closeAgentsModal(); openAgent(name); }
+
+  document.querySelectorAll('.ag-cat-item[data-agcat2]').forEach(function (item) {
+    item.addEventListener('click', function () {
+      document.querySelectorAll('.ag-cat-item[data-agcat2]').forEach(function (x) { x.classList.remove('active'); });
+      item.classList.add('active');
+      agActiveCat2 = item.dataset.agcat2 || 'all';
+      var q = document.getElementById('agSearch2');
+      agRender2(agActiveCat2, q ? q.value : '');
+    });
+  });
+  var agSearch2El = document.getElementById('agSearch2');
+  if (agSearch2El) agSearch2El.addEventListener('input', function () { agRender2(agActiveCat2, agSearch2El.value); });
+
+  /* ---- Skills modal ---- */
+  function openSkillsModal() {
+    document.getElementById('skillsModal').classList.add('open');
+    skRender(skActiveType, skActiveCat, '');
+  }
+  function closeSkillsModal() { document.getElementById('skillsModal').classList.remove('open'); }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeAgentsModal(); closeSkillsModal(); }
+  });
+
+  /* ---- 我的项目 dropdown ---- */
+  function toggleMyProjects(e) {
+    e.stopPropagation();
+    document.getElementById('myProjDropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function () {
+    var d = document.getElementById('myProjDropdown');
+    if (d) d.classList.remove('open');
+  });
+  var myProjWrap = document.getElementById('myProjWrap');
+  if (myProjWrap) myProjWrap.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  /* ---- Chat ---- */
+  var activeSkills = [];
+  var replies = [
+    '好的，我已收到您的请求。正在分析网络拓扑结构，识别关键节点与潜在风险点……\n\n初步分析结果显示当前网络存在 3 处冗余路径需要优化，建议对骨干链路进行带宽扩容评估。',
+    '已根据您提供的参数生成基线 HLD 草稿。文档结构包含：\n• 网络架构概述\n• 关键设备清单\n• IP 地址规划\n• 路由策略说明\n\n请确认是否需要进一步细化 LLD 部分？',
+    '配置脚本生成完成。共生成 **12 台设备**的配置文件，已通过语法核查，正确率 100%。\n\n您可以在"附件"区域下载完整脚本包，或直接复制单台设备配置。',
+    '路由分析完成。发现以下问题：\n\n1. AS 65001 存在次优路径，建议调整 LOCAL_PREF 值\n2. 默认路由注入策略可能导致流量黑洞，建议增加 null0 保护\n3. BGP 反射器配置正确，未发现路由环路风险。',
+    '业务比对完成，共比对 **847 条**配置项。\n\n✅ 匹配：821 条\n⚠️ 差异：18 条（已生成差异报告）\n❌ 缺失：8 条（需人工确认）\n\n差异主要集中在 QoS 策略和 ACL 规则部分。'
+  ];
+  var replyIdx = 0;
+
+  function toggleSkillPicker(e) {
+    e.stopPropagation();
+    var picker = document.getElementById('skillPicker');
+    if (picker) picker.classList.toggle('open');
+  }
+  document.addEventListener('click', function () {
+    var picker = document.getElementById('skillPicker');
+    if (picker) picker.classList.remove('open');
+  });
+  var pickerEl = document.getElementById('skillPicker');
+  if (pickerEl) pickerEl.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  function switchToSkillsTab() {
+    var picker = document.getElementById('skillPicker');
+    if (picker) picker.classList.remove('open');
+    openSkillsModal();
+  }
+
+  function addSkill(name) {
+    if (activeSkills.indexOf(name) > -1) { var p = document.getElementById('skillPicker'); if (p) p.classList.remove('open'); return; }
+    activeSkills.push(name);
+    renderActiveSkills();
+    var p = document.getElementById('skillPicker'); if (p) p.classList.remove('open');
+  }
+
+  function removeSkill(name) {
+    activeSkills = activeSkills.filter(function (s) { return s !== name; });
+    renderActiveSkills();
+  }
+
+  function renderActiveSkills() {
+    var wrap = document.getElementById('activeSkills');
+    if (wrap) wrap.style.display = 'none';
+    var badge = document.getElementById('skillBadge');
+    if (badge) { badge.textContent = activeSkills.length; badge.style.display = activeSkills.length ? 'flex' : 'none'; }
+    var spList = document.getElementById('spSkillList');
+    if (spList) {
+      if (activeSkills.length) {
+        spList.innerHTML = activeSkills.map(function (s) {
+          return '<div class="skill-picker-item">' +
+            '<span class="sp-skill-name">' + s + '</span>' +
+            '<span class="sp-remove" onclick="removeSkill(\'' + s.replace(/'/g,"\\'") + '\')">×</span></div>';
+        }).join('');
+      } else {
+        spList.innerHTML = '<div style="padding:8px 12px;font-size:12px;color:var(--ink-3)">暂无已加载技能</div>';
+      }
+    }
+    var countEl = document.getElementById('spHeaderCount');
+    if (countEl) countEl.textContent = activeSkills.length;
+  }
+
+  renderActiveSkills();
+
+  function sendMessage() {
+    var input = document.getElementById('chatInput');
+    if (!input) return;
+    var text = input.value.trim();
+    if (!text) return;
+    var msgs = document.getElementById('chatMessages');
+    if (!msgs) return;
+    var welcome = document.getElementById('chatWelcome');
+    if (welcome) welcome.style.display = 'none';
+    var now = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    var skillTags = activeSkills.map(function (s) {
+      return '<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;background:rgba(44,74,122,.1);color:#2c4a7a;font-size:11px">' + s + '</span>';
+    }).join('');
+    msgs.innerHTML += '<div class="msg user"><div class="msg-avatar">ZL</div><div class="msg-body">' +
+      (skillTags ? '<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:2px">' + skillTags + '</div>' : '') +
+      '<div class="msg-bubble">' + text.replace(/\n/g,'<br>') + '</div>' +
+      '<div class="msg-meta">' + now + '</div></div></div>';
+    input.value = '';
+    input.style.height = 'auto';
+    msgs.scrollTop = msgs.scrollHeight;
+    var typingId = 'typing-' + Date.now();
+    msgs.innerHTML += '<div class="msg assistant" id="' + typingId + '"><div class="msg-avatar"><svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor"><rect x="4" y="14" width="2.4" height="6" rx=".6"></rect><rect x="9" y="9" width="2.4" height="11" rx=".6"></rect><rect x="14" y="6" width="2.4" height="14" rx=".6"></rect><rect x="19" y="9" width="2.4" height="11" rx=".6"></rect><rect x="24" y="14" width="2.4" height="6" rx=".6"></rect></svg></div><div class="msg-body"><div class="msg-bubble" style="color:var(--ink-3);font-style:italic">正在思考…</div></div></div>';
+    msgs.scrollTop = msgs.scrollHeight;
+    var reply = replies[replyIdx % replies.length]; replyIdx++;
+    setTimeout(function () {
+      var el = document.getElementById(typingId);
+      if (el) {
+        el.querySelector('.msg-bubble').innerHTML = reply.replace(/\n/g,'<br>');
+        el.querySelector('.msg-body').innerHTML += '<div class="msg-meta">' + new Date().toLocaleTimeString('zh-CN', { hour:'2-digit', minute:'2-digit' }) + '</div>';
+        msgs.scrollTop = msgs.scrollHeight;
+      }
+    }, 900 + Math.random() * 600);
+  }
+
+  function sendSuggestion(el) {
+    var input = document.getElementById('chatInput');
+    if (input) { input.value = el.textContent; sendMessage(); }
+  }
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+</script>
+
+</body></html>
