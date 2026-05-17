@@ -121,29 +121,6 @@
   .nav-btn svg { color: var(--ink-2); transition: color .2s; }
   .nav-btn:hover svg { color: var(--ink); }
   .nav-btn--icon { width: 34px; height: 34px; padding: 0; justify-content: center; }
-  .nav-btn[data-tip] { position: relative; }
-  .nav-btn[data-tip]::after {
-    content: attr(data-tip);
-    position: absolute;
-    top: calc(100% + 7px);
-    left: 50%;
-    transform: translateX(-50%) translateY(-3px);
-    background: var(--ink);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 9px;
-    border-radius: 5px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .15s, transform .15s;
-    z-index: 100;
-  }
-  .nav-btn[data-tip]:hover::after {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
   .nav-search {
     display: flex; align-items: center; gap: 8px;
     background: #fff;
@@ -853,14 +830,40 @@
   .sb-sec-hd:hover { background: var(--line-2); color: var(--ink); }
   .sb-sec-body { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; overflow: hidden; }
   .sb-sec-body.collapsed { display: none; }
+  .sb-sec-count {
+    margin-left: auto;
+    min-width: 18px; height: 18px; border-radius: 9px;
+    background: var(--line-2); color: var(--ink-3);
+    font-size: 11px; font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0 5px; line-height: 1; flex-shrink: 0;
+  }
+  #sbProjectBody, #sessionList {
+    background:
+      linear-gradient(rgba(255,255,255,0), #ffffff 85%) center bottom,
+      radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.07), rgba(0,0,0,0)) center bottom;
+    background-repeat: no-repeat;
+    background-size: 100% 36px, 100% 10px;
+    background-attachment: local, scroll;
+  }
   .sb-agent-item {
     display: flex; align-items: center; gap: 8px;
-    padding: 6px 10px 6px 14px; border-radius: 7px;
+    padding: 6px 6px 6px 14px; border-radius: 7px;
     font-size: 13px; color: var(--ink); cursor: pointer;
     transition: background .12s, color .12s; flex-shrink: 0;
   }
   .sb-agent-item:hover { background: var(--line-2); color: var(--ink); }
   .sb-agent-item.active { background: rgba(31,107,94,.09); color: var(--horizontal); font-weight: 600; }
+  .sb-agent-item.pinned.active { background: rgba(44,74,122,.09); color: var(--vertical); font-weight: 600; }
+  .sb-agent-del {
+    flex-shrink: 0; display: none; align-items: center; justify-content: center;
+    width: 20px; height: 20px; border-radius: 4px;
+    background: none; border: none; padding: 0;
+    cursor: pointer; color: var(--ink-3); font-size: 14px; line-height: 1;
+    transition: color .12s, background .12s;
+  }
+  .sb-agent-item:hover .sb-agent-del { display: flex; }
+  .sb-agent-del:hover { color: var(--accent); background: rgba(194,90,63,.1); }
   .sb-agent-emoji { font-size: 14px; flex-shrink: 0; }
   .sb-agent-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* --- Skills modal overlay --- */
@@ -1209,10 +1212,10 @@
     padding: 6px 11px 6px 9px;
     border-radius: 20px;
     border: 1.5px solid var(--line);
-    background: none;
+    background: #fff;
     cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    color: var(--ink-3); font-size: 12.5px;
+    color: var(--ink-2); font-size: 13px; font-weight: 500;
     transition: border-color .15s, color .15s, background .15s;
     font-family: inherit;
   }
@@ -1226,10 +1229,10 @@
     padding: 6px 11px 6px 9px;
     border-radius: 20px;
     border: 1.5px solid var(--line);
-    background: none;
+    background: #fff;
     cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    color: var(--ink-3); font-size: 12.5px;
+    color: var(--ink-2); font-size: 13px; font-weight: 500;
     transition: border-color .15s, color .15s, background .15s;
     font-family: inherit;
   }
@@ -1704,6 +1707,17 @@
   }
   .ag-card:hover { border-color: #b0b8c8; box-shadow: 0 3px 14px -5px rgba(0,0,0,.10); }
   .ag-card-head { display: flex; align-items: flex-start; gap: 11px; }
+  .ag-card-del {
+    flex-shrink: 0; margin-left: auto;
+    display: none; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 5px;
+    background: none; border: none; padding: 0;
+    cursor: pointer; color: var(--ink-3); font-size: 16px; line-height: 1;
+    transition: color .12s, background .12s;
+  }
+  .ag-card:hover .ag-card-del { display: flex; }
+  .ag-card-del:hover { color: var(--accent); background: rgba(194,90,63,.1); }
+  #sbProjectBody { max-height: 240px; overflow-y: auto; }
   .ag-avatar {
     width: 46px; height: 46px; border-radius: 11px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center; font-size: 26px; line-height: 1;
@@ -2068,7 +2082,8 @@
       <button class="sb-sec-hd" onclick="sbToggle('sbBaselineBody', this)">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2"></circle><circle cx="3" cy="4" r="1.5"></circle><circle cx="13" cy="4" r="1.5"></circle><circle cx="3" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="4.1" y1="4.8" x2="6.3" y2="6.6"></line><line x1="11.9" y1="4.8" x2="9.7" y2="6.6"></line><line x1="4.1" y1="11.2" x2="6.3" y2="9.4"></line><line x1="11.9" y1="11.2" x2="9.7" y2="9.4"></line></svg>
         基线智能体
-        <svg class="hist-chevron rotated" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+        <span class="sb-sec-count">6</span>
+        <svg class="hist-chevron" style="margin-left:0" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
       </button>
       <div class="sb-sec-body collapsed" id="sbBaselineBody">
         <div class="sb-agent-item" onclick="sbClickHAgent('评估规划智能体')"><span class="sb-baseline-dot"></span>评估规划智能体</div>
@@ -2085,12 +2100,13 @@
       <button class="sb-sec-hd" onclick="sbToggle('sbProjectBody', this)">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="2.5"></circle><path d="M2.5 13 a5.5 5.5 0 0 1 11 0"></path></svg>
         个人智能体
-        <svg class="hist-chevron rotated" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+        <span class="sb-sec-count" id="sbAgentCount"></span>
+        <svg class="hist-chevron" style="margin-left:0" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
       </button>
       <div class="sb-sec-body collapsed" id="sbProjectBody">
         <div class="sb-create-btn" onclick="openAgentsModal()">
           <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="7" y1="2" x2="7" y2="12"></line><line x1="2" y1="7" x2="12" y2="7"></line></svg>
-          创建智能体
+          管理智能体
         </div>
         <div id="sbAgentList"></div>
       </div>
@@ -2101,7 +2117,8 @@
       <button class="sb-sec-hd" id="histBtn" onclick="sbToggle('sessionList', this)">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"></circle><polyline points="8,4.5 8,8 10.5,9.5"></polyline></svg>
         历史记录
-        <svg class="hist-chevron rotated" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+        <span class="sb-sec-count" id="sbSessionCount"></span>
+        <svg class="hist-chevron" style="margin-left:0" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
       </button>
       <div class="session-list collapsed" id="sessionList"></div>
 
@@ -2313,6 +2330,8 @@
       return '<div class="session-item' + (s.id === activeSessionId ? ' active' : '') + '" onclick="loadSession(' + s.id + ')" title="' + s.name + '">' +
         icon + '<span class="session-item-name">' + s.name + '</span></div>';
     }).join('');
+    var sc = document.getElementById('sbSessionCount');
+    if (sc) sc.textContent = sessions.length;
   }
 
   function loadSession(id) {
@@ -2339,13 +2358,16 @@
     if (titleEl) titleEl.textContent = '个人智能体工作台';
     var msgs = document.getElementById('chatMessages');
     if (msgs) {
-      msgs.querySelectorAll('.msg').forEach(function (el) { el.remove(); });
+      msgs.querySelectorAll('.msg').forEach(function(el) { el.remove(); });
       var welcome = document.getElementById('chatWelcome');
       if (welcome) { var h3 = welcome.querySelector('h3'); if (h3) h3.textContent = '个人智能体'; welcome.style.display = ''; }
     }
     activeSkills = [];
     renderActiveSkills();
     renderSessions();
+    document.querySelectorAll('.sb-agent-item').forEach(function(el) { el.classList.remove('active'); });
+    var def = document.getElementById('sbDefaultAgent');
+    if (def) def.classList.add('active');
   }
 
   renderSessions();
@@ -2573,11 +2595,24 @@
   function sbRenderAgents() {
     var list = document.getElementById('sbAgentList');
     if (!list) return;
-    list.innerHTML = agData.map(function (a) {
-      return '<div class="sb-agent-item" onclick="sbOpenAgent(\'' + a.name.replace(/'/g,"\\'") + '\')" title="' + a.name + '">' +
+    var pinned = '<div class="sb-agent-item pinned" id="sbDefaultAgent" onclick="newSession()" title="个人智能体">' +
+      '<span class="sb-baseline-dot" style="background:var(--vertical)"></span>' +
+      '<span class="sb-agent-name">个人智能体</span></div>';
+    var items = agData.map(function(a) {
+      var safe = a.name.replace(/'/g, "\\'");
+      return '<div class="sb-agent-item" onclick="sbOpenAgent(\'' + safe + '\')" title="' + a.name + '">' +
         '<span class="sb-baseline-dot"></span>' +
         '<span class="sb-agent-name">' + a.name + '</span></div>';
     }).join('');
+    list.innerHTML = pinned + items;
+    var ac = document.getElementById('sbAgentCount');
+    if (ac) ac.textContent = agData.length + 1;
+  }
+
+  function sbDeleteAgent(e, name) {
+    e.stopPropagation();
+    agData = agData.filter(function(a) { return a.name !== name; });
+    sbRenderAgents();
   }
 
   function sbOpenAgent(name) { openAgent(name); }
@@ -2619,6 +2654,8 @@
   }
 
   sbRenderAgents();
+  var _def = document.getElementById('sbDefaultAgent');
+  if (_def) _def.classList.add('active');
 
   /* ---- Agents modal ---- */
   var agActiveCat2 = 'all';
@@ -2633,12 +2670,22 @@
     });
     filtered.sort(function (a, b) { return b.stars - a.stars; });
     grid.innerHTML = filtered.length ? filtered.map(function (a) {
-      return '<div class="ag-card" onclick="openAgentFromModal(\'' + a.name.replace(/'/g,"\\'") + '\')">' +
+      var safe = a.name.replace(/'/g, "\\'");
+      return '<div class="ag-card" onclick="openAgentFromModal(\'' + safe + '\')">' +
         '<div class="ag-card-head"><div class="ag-avatar" style="background:' + a.bg + '">' + a.emoji + '</div>' +
-        '<div class="ag-card-info"><div class="ag-card-name">' + a.name + '</div><div class="ag-card-author">' + a.author + '</div></div></div>' +
+        '<div class="ag-card-info"><div class="ag-card-name">' + a.name + '</div><div class="ag-card-author">' + a.author + '</div></div>' +
+        '<button class="ag-card-del" onclick="deleteAgentFromModal(event,\'' + safe + '\')" title="删除">×</button></div>' +
         '<div class="ag-card-desc">' + a.desc + '</div>' +
         '<div class="ag-card-foot"><span>★ ' + fmtNum(a.stars) + '</span><span>⑂ ' + fmtNum(a.forks) + '</span><span>' + a.cat + '</span></div></div>';
     }).join('') : '<div class="ag-no-results">没有找到匹配的 Agent</div>';
+  }
+
+  function deleteAgentFromModal(e, name) {
+    e.stopPropagation();
+    agData = agData.filter(function(a) { return a.name !== name; });
+    var q = document.getElementById('agSearch2');
+    agRender2(agActiveCat2, q ? q.value : '');
+    sbRenderAgents();
   }
 
   function openAgentsModal() {
@@ -2713,10 +2760,11 @@
   }
 
   function addSkill(name) {
-    if (activeSkills.indexOf(name) > -1) { var p = document.getElementById('skillPicker'); if (p) p.classList.remove('open'); return; }
+    if (activeSkills.indexOf(name) > -1) { var p = document.getElementById('skillPicker'); if (p) p.classList.remove('open'); closeSkillsModal(); return; }
     activeSkills.push(name);
     renderActiveSkills();
     var p = document.getElementById('skillPicker'); if (p) p.classList.remove('open');
+    closeSkillsModal();
   }
 
   function removeSkill(name) {
