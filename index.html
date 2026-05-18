@@ -772,6 +772,12 @@
     gap: 16px;
     height: calc(100vh - 120px);
     min-height: 400px;
+    position: relative;
+    transition: grid-template-columns .24s cubic-bezier(.4,0,.2,1), gap .24s cubic-bezier(.4,0,.2,1);
+  }
+  .project-layout.sb-hidden {
+    grid-template-columns: 40px 1fr;
+    gap: 8px;
   }
 
   /* Sidebar */
@@ -782,8 +788,59 @@
     padding: 12px 10px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     overflow: hidden;
+    min-width: 0;
+    transition: padding .24s cubic-bezier(.4,0,.2,1);
+  }
+  /* Collapsed icon-strip state */
+  .project-layout.sb-hidden .proj-sidebar {
+    padding: 10px 0;
+    align-items: center;
+    gap: 2px;
+  }
+  .project-layout.sb-hidden .sb-hd-label,
+  .project-layout.sb-hidden .sb-sec-count,
+  .project-layout.sb-hidden .hist-chevron,
+  .project-layout.sb-hidden .proj-tab-divider,
+  .project-layout.sb-hidden .sb-sec-hd-row,
+  .project-layout.sb-hidden .sb-create-btn { display: none !important; }
+  .project-layout.sb-hidden .sb-sec-body,
+  .project-layout.sb-hidden .session-list { display: none !important; }
+  .project-layout.sb-hidden .sb-sec-hd {
+    justify-content: center;
+    padding: 9px 0;
+    width: 38px;
+    border-radius: 8px;
+    gap: 0;
+  }
+
+  /* Sidebar toggle button */
+  .sb-toggle-btn {
+    position: absolute;
+    left: 218px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 42px;
+    border-radius: 0 8px 8px 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-3);
+    z-index: 20;
+    box-shadow: 3px 0 8px -3px rgba(0,0,0,.1);
+    transition: left .24s cubic-bezier(.4,0,.2,1), color .15s, background .15s;
+    padding: 0;
+  }
+  .sb-toggle-btn:hover { background: var(--line-2); color: var(--ink); }
+  .project-layout.sb-hidden .sb-toggle-btn { left: 37px; }
+  .sb-toggle-btn .sb-toggle-icon {
+    transition: transform .24s cubic-bezier(.4,0,.2,1);
+  }
+  .project-layout.sb-hidden .sb-toggle-btn .sb-toggle-icon {
+    transform: rotate(180deg);
   }
   .session-list {
     display: flex; flex-direction: column; gap: 1px;
@@ -929,6 +986,40 @@
   .my-proj-item:hover { background: var(--line-2); color: var(--ink); }
   .my-proj-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); flex-shrink: 0; }
   .my-proj-sep { height: 1px; background: var(--line); margin: 4px 0; }
+  /* --- 我的收藏 dropdown --- */
+  .my-fav-wrap { position: relative; }
+  .my-fav-dropdown {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0;
+    width: 296px; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; box-shadow: 0 8px 32px -8px rgba(0,0,0,.18);
+    z-index: 200; overflow: hidden;
+  }
+  .my-fav-dropdown.open { display: block; }
+  .my-fav-cat-hd {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 16px 6px; font-size: 11px; font-weight: 700;
+    color: var(--ink-3); letter-spacing: .5px; text-transform: uppercase;
+  }
+  .my-fav-cat-hd .fav-cat-icon {
+    width: 18px; height: 18px; border-radius: 5px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 11px;
+  }
+  .fav-cat-icon--proj  { background: rgba(44,74,122,.12);  color: var(--vertical); }
+  .fav-cat-icon--agent { background: rgba(31,107,94,.12);  color: var(--horizontal); }
+  .fav-cat-icon--skill { background: rgba(123,79,166,.12); color: #7b4fa6; }
+  .my-fav-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 7px 16px 7px 32px; font-size: 13px; color: var(--ink-2);
+    cursor: pointer; transition: background .1s, color .1s; text-decoration: none;
+  }
+  .my-fav-item:hover { background: var(--line-2); color: var(--ink); }
+  .fav-skill-tag {
+    display: inline-flex; align-items: center;
+    padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .fav-item-meta { font-size: 11px; color: var(--ink-3); margin-left: auto; }
   /* sidebar section header row (toggle + action button) */
   .sb-sec-hd-row { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
   .sb-sec-hd-row .sb-sec-hd { flex: 1; }
@@ -990,7 +1081,7 @@
   }
   .proj-tab svg { flex-shrink: 0; opacity: .7; }
   .proj-tab.active svg { opacity: 1; }
-  .proj-tab-divider { height: 0; border: none; border-top: 1.5px dashed var(--line); margin: 8px 6px; opacity: .6; }
+  .proj-tab-divider { height: 0; border: none; border-top: 1.5px dashed var(--line); margin: 3px 6px; opacity: .6; }
 
   /* Main panel */
   .proj-main {
@@ -1209,21 +1300,25 @@
   .chat-input-spacer { flex: 1; }
   .chat-new-btn {
     flex-shrink: 0;
-    padding: 6px 11px 6px 9px;
+    padding: 6px 13px 6px 10px;
     border-radius: 20px;
-    border: 1.5px solid var(--line);
-    background: #fff;
+    border: 1.5px solid var(--vertical);
+    background: var(--vertical);
     cursor: pointer;
     display: inline-flex; align-items: center; gap: 6px;
-    color: var(--ink-2); font-size: 13px; font-weight: 500;
-    transition: border-color .15s, color .15s, background .15s;
+    color: #fff; font-size: 13px; font-weight: 600;
+    transition: border-color .15s, color .15s, background .15s, box-shadow .15s;
     font-family: inherit;
+    box-shadow: 0 2px 8px rgba(44,74,122,0.18);
+    letter-spacing: .01em;
   }
   .chat-new-btn:hover {
-    border-color: var(--vertical);
-    color: var(--vertical);
-    background: var(--vertical-tint);
+    background: #3a5e96;
+    border-color: #3a5e96;
+    box-shadow: 0 3px 12px rgba(44,74,122,0.28);
+    color: #fff;
   }
+  .chat-new-btn:active { transform: scale(.96); }
   .chat-attach-btn {
     flex-shrink: 0;
     padding: 6px 11px 6px 9px;
@@ -1817,8 +1912,92 @@
           <div style="height:6px"></div>
         </div>
       </div>
+      <div class="my-fav-wrap" id="myFavWrap">
+        <button class="nav-link-btn" onclick="toggleMyFav(event)">
+          我的收藏
+          <svg style="vertical-align:-1px;margin-left:3px" viewBox="0 0 10 6" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
+        </button>
+        <div class="my-fav-dropdown" id="myFavDropdown">
+          <div style="padding:8px 0 4px">
+            <!-- 收藏的项目 -->
+            <div class="my-fav-cat-hd">
+              <span class="fav-cat-icon fav-cat-icon--proj">
+                <svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3.5h4l1.2 1.3H13a.8.8 0 0 1 .8.8v5a.8.8 0 0 1-.8.8H1a.8.8 0 0 1-.8-.8v-6.3A.8.8 0 0 1 1 3.5z"></path></svg>
+              </span>
+              收藏的项目
+            </div>
+            <a class="my-fav-item" href="#">
+              <span class="my-proj-dot" style="background:#2c4a7a"></span>
+              骨干网容量评估
+              <span class="fav-item-meta">IPRAN</span>
+            </a>
+            <a class="my-fav-item" href="#">
+              <span class="my-proj-dot" style="background:#2c4a7a"></span>
+              VXLAN Spine-Leaf 设计
+              <span class="fav-item-meta">IPRAN</span>
+            </a>
+            <a class="my-fav-item" href="#">
+              <span class="my-proj-dot" style="background:#1f6b5e"></span>
+              核心骨干网重构项目
+              <span class="fav-item-meta">IPCORE</span>
+            </a>
+          </div>
+          <div class="my-proj-sep"></div>
+          <!-- 收藏的智能体 -->
+          <div style="padding:4px 0">
+            <div class="my-fav-cat-hd">
+              <span class="fav-cat-icon fav-cat-icon--agent">
+                <svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="10" height="7" rx="2"></rect><path d="M5 4V3a2 2 0 0 1 4 0v1"></path><circle cx="5.5" cy="7.5" r=".8" fill="currentColor" stroke="none"></circle><circle cx="8.5" cy="7.5" r=".8" fill="currentColor" stroke="none"></circle></svg>
+              </span>
+              收藏的智能体
+            </div>
+            <a class="my-fav-item" href="#" onclick="openAgent('IPRAN 场景智能体');return false;">
+              <span class="my-proj-dot" style="background:#2c4a7a"></span>
+              IPRAN 场景智能体
+              <span class="fav-item-meta">垂直</span>
+            </a>
+            <a class="my-fav-item" href="#" onclick="openAgent('基线文档生成助手');return false;">
+              <span class="my-proj-dot" style="background:#1f6b5e"></span>
+              基线文档生成助手
+              <span class="fav-item-meta">水平</span>
+            </a>
+            <a class="my-fav-item" href="#" onclick="openAgent('配置核查智能体');return false;">
+              <span class="my-proj-dot" style="background:#2c4a7a"></span>
+              配置核查智能体
+              <span class="fav-item-meta">垂直</span>
+            </a>
+          </div>
+          <div class="my-proj-sep"></div>
+          <!-- 收藏的技能 -->
+          <div style="padding:4px 0">
+            <div class="my-fav-cat-hd">
+              <span class="fav-cat-icon fav-cat-icon--skill">
+                <svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="5" height="8" rx="1.2"></rect><rect x="8" y="1" width="5" height="11" rx="1.2"></rect></svg>
+              </span>
+              收藏的技能
+            </div>
+            <a class="my-fav-item" href="#" onclick="addSkill('路由分析');closeFavDropdown();return false;">
+              <span class="my-proj-dot" style="background:#2c4a7a"></span>
+              路由分析
+              <span class="fav-item-meta">垂直技能</span>
+            </a>
+            <a class="my-fav-item" href="#" onclick="addSkill('HLD 生成');closeFavDropdown();return false;">
+              <span class="my-proj-dot" style="background:#1f6b5e"></span>
+              HLD 生成
+              <span class="fav-item-meta">文档技能</span>
+            </a>
+            <a class="my-fav-item" href="#" onclick="addSkill('配置脚本生成');closeFavDropdown();return false;">
+              <span class="my-proj-dot" style="background:#7b4fa6"></span>
+              配置脚本生成
+              <span class="fav-item-meta">生成技能</span>
+            </a>
+          </div>
+          <div style="height:6px"></div>
+        </div>
+      </div>
     </div>
     <div class="nav-tools">
+      <div style="width:1px;height:18px;background:var(--line);margin:0 2px;flex-shrink:0"></div>
       <button class="nav-btn nav-btn--icon" type="button" data-tip="帮助">
         <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="8" cy="8" r="6.4"></circle>
@@ -2073,15 +2252,21 @@
 
   <!-- reuse same topnav structure but as a component reference; nav is outside pages -->
 
-  <div class="project-layout">
+  <div class="project-layout" id="projectLayout">
+
+    <button class="sb-toggle-btn" id="sbToggleBtn" onclick="toggleSidebar()" title="收起侧边栏">
+      <svg class="sb-toggle-icon" viewBox="0 0 6 10" width="6" height="10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="5,1 1,5 5,9"></polyline>
+      </svg>
+    </button>
 
     <!-- Sidebar -->
     <aside class="proj-sidebar">
 
       <!-- 1. 基线智能体 -->
-      <button class="sb-sec-hd" onclick="sbToggle('sbBaselineBody', this)">
+      <button class="sb-sec-hd" onclick="sbToggle('sbBaselineBody', this)" data-tip="基线智能体">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2"></circle><circle cx="3" cy="4" r="1.5"></circle><circle cx="13" cy="4" r="1.5"></circle><circle cx="3" cy="12" r="1.5"></circle><circle cx="13" cy="12" r="1.5"></circle><line x1="4.1" y1="4.8" x2="6.3" y2="6.6"></line><line x1="11.9" y1="4.8" x2="9.7" y2="6.6"></line><line x1="4.1" y1="11.2" x2="6.3" y2="9.4"></line><line x1="11.9" y1="11.2" x2="9.7" y2="9.4"></line></svg>
-        基线智能体
+        <span class="sb-hd-label">基线智能体</span>
         <span class="sb-sec-count">6</span>
         <svg class="hist-chevron" style="margin-left:0" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
       </button>
@@ -2097,9 +2282,9 @@
       <div class="proj-tab-divider"></div>
 
       <!-- 2. 个人智能体 -->
-      <button class="sb-sec-hd" onclick="sbToggle('sbProjectBody', this)">
+      <button class="sb-sec-hd" onclick="sbToggle('sbProjectBody', this)" data-tip="个人智能体">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="5" r="2.5"></circle><path d="M2.5 13 a5.5 5.5 0 0 1 11 0"></path></svg>
-        个人智能体
+        <span class="sb-hd-label">个人智能体</span>
         <span class="sb-sec-count" id="sbAgentCount"></span>
         <svg class="hist-chevron" style="margin-left:0" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
       </button>
@@ -2114,9 +2299,9 @@
       <div class="proj-tab-divider"></div>
 
       <!-- 3. 历史记录 -->
-      <button class="sb-sec-hd" id="histBtn" onclick="sbToggle('sessionList', this)">
+      <button class="sb-sec-hd" id="histBtn" onclick="sbToggle('sessionList', this)" data-tip="历史记录">
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"></circle><polyline points="8,4.5 8,8 10.5,9.5"></polyline></svg>
-        历史记录
+        <span class="sb-hd-label">历史记录</span>
         <span class="sb-sec-count" id="sbSessionCount"></span>
         <svg class="hist-chevron" style="margin-left:0" viewBox="0 0 10 6" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,1 5,5 9,1"></polyline></svg>
       </button>
@@ -2177,9 +2362,9 @@
               <textarea class="chat-textarea" id="chatInput" rows="1" placeholder="向智能体发消息…" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
             </div>
             <div class="chat-input-row">
-              <button class="chat-new-btn" title="新增对话" onclick="newSession()">
-                <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.5 h9 a1 1 0 0 1 1 1 v5 a1 1 0 0 1-1 1 H7 L5 12.5 v-2 H2 a1 1 0 0 1-1-1 v-5 a1 1 0 0 1 1-1 z"></path><line x1="12" y1="5" x2="15" y2="2"></line><line x1="13" y1="2" x2="15" y2="2" ></line><line x1="15" y1="2" x2="15" y2="4"></line></svg>
-                会话
+              <button class="chat-new-btn" title="新建会话" onclick="newSession()">
+                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="2" x2="8" y2="14"></line><line x1="2" y1="8" x2="14" y2="8"></line></svg>
+                新建会话
               </button>
               <button class="chat-attach-btn" title="上传附件" onclick="document.getElementById('attachInput').click()">
                 <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.5 L6.5 13 a3.5 3.5 0 0 1-5-5 L8 1.5 a2.3 2.3 0 0 1 3.2 3.2 L5 11 a1.1 1.1 0 0 1-1.6-1.6 L9 4"></path></svg>
@@ -2322,17 +2507,30 @@
   ];
   var activeSessionId = null;
 
+  var sbSessExpanded = false;
+  var SB_SESS_LIMIT = 5;
+
   function renderSessions() {
     var list = document.getElementById('sessionList');
     if (!list) return;
     var icon = '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 2.5 h11 a.5.5 0 0 1 .5.5 v6 a.5.5 0 0 1-.5.5 H8 L6 11.5 v-2 H1.5 a.5.5 0 0 1-.5-.5 V3 a.5.5 0 0 1 .5-.5 z"></path></svg>';
-    list.innerHTML = sessions.map(function (s) {
+    var visible = (sbSessExpanded || sessions.length <= SB_SESS_LIMIT) ? sessions : sessions.slice(0, SB_SESS_LIMIT);
+    var html = visible.map(function (s) {
       return '<div class="session-item' + (s.id === activeSessionId ? ' active' : '') + '" onclick="loadSession(' + s.id + ')" title="' + s.name + '">' +
         icon + '<span class="session-item-name">' + s.name + '</span></div>';
     }).join('');
+    if (sessions.length > SB_SESS_LIMIT) {
+      var remaining = sessions.length - SB_SESS_LIMIT;
+      html += sbSessExpanded
+        ? '<button class="session-more-btn" onclick="sbToggleSessMore()">收起</button>'
+        : '<button class="session-more-btn" onclick="sbToggleSessMore()">展示更多 ' + remaining + ' 项</button>';
+    }
+    list.innerHTML = html;
     var sc = document.getElementById('sbSessionCount');
     if (sc) sc.textContent = sessions.length;
   }
+
+  function sbToggleSessMore() { sbSessExpanded = !sbSessExpanded; renderSessions(); }
 
   function loadSession(id) {
     var s = null;
@@ -2592,22 +2790,35 @@
     if (chevron) chevron.classList.toggle('rotated', collapsed);
   }
 
+  var sbAgExpanded = false;
+  var SB_AG_LIMIT = 4;
+
   function sbRenderAgents() {
     var list = document.getElementById('sbAgentList');
     if (!list) return;
     var pinned = '<div class="sb-agent-item pinned" id="sbDefaultAgent" onclick="newSession()" title="个人智能体">' +
       '<span class="sb-baseline-dot" style="background:var(--vertical)"></span>' +
       '<span class="sb-agent-name">个人智能体</span></div>';
-    var items = agData.map(function(a) {
+    var visible = (sbAgExpanded || agData.length <= SB_AG_LIMIT) ? agData : agData.slice(0, SB_AG_LIMIT);
+    var items = visible.map(function(a) {
       var safe = a.name.replace(/'/g, "\\'");
       return '<div class="sb-agent-item" onclick="sbOpenAgent(\'' + safe + '\')" title="' + a.name + '">' +
         '<span class="sb-baseline-dot"></span>' +
         '<span class="sb-agent-name">' + a.name + '</span></div>';
     }).join('');
-    list.innerHTML = pinned + items;
+    var moreBtn = '';
+    if (agData.length > SB_AG_LIMIT) {
+      var remaining = agData.length - SB_AG_LIMIT;
+      moreBtn = sbAgExpanded
+        ? '<button class="session-more-btn" onclick="sbToggleAgMore()">收起</button>'
+        : '<button class="session-more-btn" onclick="sbToggleAgMore()">展示更多 ' + remaining + ' 项</button>';
+    }
+    list.innerHTML = pinned + items + moreBtn;
     var ac = document.getElementById('sbAgentCount');
     if (ac) ac.textContent = agData.length + 1;
   }
+
+  function sbToggleAgMore() { sbAgExpanded = !sbAgExpanded; sbRenderAgents(); }
 
   function sbDeleteAgent(e, name) {
     e.stopPropagation();
@@ -2726,9 +2937,33 @@
   document.addEventListener('click', function () {
     var d = document.getElementById('myProjDropdown');
     if (d) d.classList.remove('open');
+    closeFavDropdown();
   });
   var myProjWrap = document.getElementById('myProjWrap');
   if (myProjWrap) myProjWrap.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  /* ---- 我的收藏 dropdown ---- */
+  function toggleMyFav(e) {
+    e.stopPropagation();
+    var d = document.getElementById('myFavDropdown');
+    var wasOpen = d.classList.contains('open');
+    document.getElementById('myProjDropdown').classList.remove('open');
+    d.classList.toggle('open', !wasOpen);
+  }
+  function closeFavDropdown() {
+    var d = document.getElementById('myFavDropdown');
+    if (d) d.classList.remove('open');
+  }
+  var myFavWrap = document.getElementById('myFavWrap');
+  if (myFavWrap) myFavWrap.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  /* ---- Sidebar toggle ---- */
+  function toggleSidebar() {
+    var layout = document.getElementById('projectLayout');
+    var btn = document.getElementById('sbToggleBtn');
+    var hidden = layout.classList.toggle('sb-hidden');
+    btn.title = hidden ? '展开侧边栏' : '收起侧边栏';
+  }
 
   /* ---- Chat ---- */
   var activeSkills = [];
